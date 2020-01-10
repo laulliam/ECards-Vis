@@ -94,6 +94,12 @@
 
 （4）探索低消费学生群体的行为特征，为学校助学金评定提供参考建议。
 
+## Schedual
+
+| date   | id       | description |
+| ------ | -------- | -------- |
+| 2019/01/10   | Lelliam        | 数据处理ing，数据预处理得出数据的部分信息      |
+
 ## Data Processing
 
 ![地点cost总和](assets/images/地点cost总和.png)
