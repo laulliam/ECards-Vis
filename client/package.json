@@ -5,7 +5,7 @@
   "author": "Lelliam <lelliam@qq.com>",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "dev": "webpack-dev-server --inline --open --hot --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "e2e": "node test/e2e/runner.js",
@@ -13,11 +13,21 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@antv/g2": "^3.5.9",
+    "cytoscape": "^3.14.2",
+    "d3": "^5.14.2",
+    "echarts": "^4.5.0",
+    "qs.js": "^0.1.12",
+    "view-design": "^4.0.2",
     "vue": "^2.5.2",
-    "vue-router": "^3.0.1"
+    "vue-axios": "^2.1.5",
+    "vue-resource": "^1.5.1",
+    "vue-router": "^3.0.1",
+    "vuex": "^3.1.2"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
+    "axios": "^0.19.2",
     "babel-core": "^6.22.1",
     "babel-helper-vue-jsx-merge-props": "^2.0.3",
     "babel-jest": "^21.0.2",
