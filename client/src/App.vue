@@ -39,4 +39,18 @@
     padding: 0;
     font-size:12px;
   }
+
+  .axis line {
+    stroke: #000;
+  }
+
+  .axis path {
+    fill: none;
+    stroke: #000;
+  }
+
+  .axis + .axis g text {
+    display: none;
+  }
+
 </style>

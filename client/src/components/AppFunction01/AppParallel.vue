@@ -7,9 +7,9 @@
   export default {
     name: "AppParallel",
     mounted() {
-      DataManager.get_f1_parallel_data().then(res=>{
-        this.Draw(res.data);
-      })
+      // DataManager.get_f1_parallel_data().then(res=>{
+      //   this.Draw(res.data);
+      // })
 
     },
     methods:{

@@ -23,10 +23,10 @@
 
 <script>
   import DataManager from "../../data/DataManager";
-  // import geoJson from '../../../static/data.csv'
+  import geoJson from '../../../static/data.csv'
   import * as d3 from 'd3'
   export default {
-    name: "AppMain",
+    name: "AppMainTest",
     data(){
       return {
         major_list:['18国际金融'],

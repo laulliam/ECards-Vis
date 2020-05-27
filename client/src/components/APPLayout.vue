@@ -1,61 +1,29 @@
 <template>
   <div id="layout">
-    <div id="slide-mask" @mouseover="sliderStatus=true"></div>
-    <Drawer title="SYSTEM FUNCTION" placement="left" :closable="sliderStatus" v-model="sliderStatus">
-      <Menu active-name="1-2" theme="light" width="auto">
-        <router-link  to="/function01" >
-          <MenuItem name="1-1">
-            <Icon type="ios-navigate"></Icon>
-            <span> 奖惩助困动态分析</span>
-          </MenuItem>
-        </router-link>
-        <router-link  to="/function02" >
-          <MenuItem name="1-2">
-            <Icon type="ios-search"></Icon>
-            <span>学业预警预测分析</span>
-          </MenuItem>
-        </router-link>
-        <router-link  to="/function03" >
-          <MenuItem name="1-3">
-            <Icon type="ios-settings"></Icon>
-            <span>错峰就餐模拟演示</span>
-          </MenuItem>
-        </router-link>
-        <router-link  to="/function04" >
-          <MenuItem name="1-4">
-            <Icon type="ios-settings"></Icon>
-            <span>近朱者赤，近墨者黑</span>
-          </MenuItem>
-        </router-link>
-      </Menu>
-    </Drawer>
     <Layout>
       <Header :style="{position: 'fixed', width: '100%'}">
-        <h2 style=" text-align: center;" class="layout-title">Data&nbsp;&nbsp;&nbsp;Visualization&nbsp;&nbsp;&nbsp;System</h2>
+        <h2 style=" text-align: center;" class="layout-title">Visualization&nbsp;&nbsp;&nbsp;And&nbsp;&nbsp;Analysis&nbsp;&nbsp;Of&nbsp;&nbsp;Campus&nbsp;&nbsp;Cards</h2>
       </Header>
       <Content>
-        <router-view></router-view>
+        <AppSystem></AppSystem>
       </Content>
-      <Footer class="layout-footer-center">2020-2021 &copy; DATA-VIS</Footer>
+<!--      <Footer class="layout-footer-center">2020-2021 &copy; DATA-VIS</Footer>-->
     </Layout>
   </div>
 </template>
 
 <script>
-    import router from '../router/index'
-    export default {
-        name: "APPLayout",
-        data(){
-            return {
-                sliderStatus:false
-            }
-        },
-        methods:{
-        },
-        components: {
-        },
-      router
-    }
+  import AppSystem from "./AppSystem";
+  import router from '../router/index'
+  export default {
+    name: "APPLayout",
+    methods:{
+    },
+    components: {
+      AppSystem
+    },
+    router
+  }
 </script>
 
 <style scoped>
@@ -78,11 +46,18 @@
   }
   .layout-title{
     font-family: Monoton;
-    height: 60px;
-    line-height: 60px;
+    height: 40px;
+    line-height: 40px;
     color: #FFFFFF;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 100;
+  }
+
+  .ivu-layout-header {
+    background: #515a6e;
+    padding: 0 50px;
+    height: 45px;
+    line-height: 45px;
   }
   .layout-nav{
     width: 420px;
@@ -125,14 +100,9 @@
   .ivu-breadcrumb{
     text-align: left;
   }
-  #slide-mask{
-    position: absolute;
-    z-index: 999;
-    width: 10px;
-    height: 100%;
-  }
+
   .ivu-layout-footer{
-    padding: 2px 2px;
+    padding: 0;
     text-align: center;
   }
 

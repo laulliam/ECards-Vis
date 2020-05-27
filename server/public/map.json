@@ -1,9 +1,6 @@
-export default {
-  geoJson: {
-    "type"
-      :
-      "FeatureCollection", "features"
-      :
+ {
+    "type": "FeatureCollection",
+    "features":
       [{
         "type": "Feature",
         "geometry": {
@@ -174,4 +171,3 @@ export default {
         }
       }]
   }
-}

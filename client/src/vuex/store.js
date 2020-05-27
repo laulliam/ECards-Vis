@@ -9,6 +9,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   // 定义状态
   state: {
+    current_cluster:'',
     f4_adjac:[]
   },
   mutations: mutation,

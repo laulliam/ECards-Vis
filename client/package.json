@@ -15,8 +15,9 @@
   "dependencies": {
     "@antv/g2": "^3.5.9",
     "cytoscape": "^3.14.2",
-    "d3": "^5.14.2",
+    "d3": "^5.16.0",
     "echarts": "^4.5.0",
+    "echarts-better": "^0.7.6",
     "qs.js": "^0.1.12",
     "view-design": "^4.0.2",
     "vue": "^2.5.2",

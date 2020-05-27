@@ -30,6 +30,18 @@ export default class DataManager {
     return axios.get('f1_graph_data');
   }
 
+  static get_f1_geoJson_data() {
+    return axios.get('f1_geoJson_data');
+  }
+
+  static get_test_data() {
+    return axios.get('test_data');
+  }
+
+  static get_test_data1() {
+    return axios.get('test_data1');
+  }
+
   static get_f4_network_data() {
     return axios.get('f4_network_data');
   }
