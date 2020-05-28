@@ -2,11 +2,11 @@
   <div id="system">
     <Card id="card" :style="{margin: '50px 5px 0 5px', background: '#fff', minHeight: '92.5vh'}">
       <div id="container">
-<!--        <AppPie></AppPie>-->
+        <AppPie></AppPie>
         <AppMainTest></AppMainTest>
 <!--        <AppMain></AppMain>-->
-<!--        <AppParallel></AppParallel>-->
-<!--        <AppThemeRiver></AppThemeRiver>-->
+        <AppParallel></AppParallel>
+        <AppThemeRiver></AppThemeRiver>
         <AppTest02></AppTest02>
         <AppTest03></AppTest03>
         <AppTest04></AppTest04>

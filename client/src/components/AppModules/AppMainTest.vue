@@ -127,8 +127,8 @@
               d.id = i
             })
             .call(g => g.append("path")
-              .attr("stroke", "#000")
-              .attr("stroke-opacity", 0.2)
+              .attr("stroke", "#565656")
+              .attr("stroke-opacity", 0.1)
               .attr("d", d => `
               M${d3.pointRadial(radial_area.x(d), radial_area.innerRadius)}
               L${d3.pointRadial(radial_area.x(d), radial_area.outerRadius)}
