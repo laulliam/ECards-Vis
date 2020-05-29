@@ -42,6 +42,9 @@ export default class DataManager {
     return axios.get('test_data1');
   }
 
+  static get_f1_iris_data() {
+    return axios.get('f1_iris_data');
+  }
   static get_f4_network_data() {
     return axios.get('f4_network_data');
   }

@@ -137,6 +137,12 @@ router.get("/f1_mealRate_data", function(req, res, next) {
   });
 });
 
+router.get("/f1_iris_data", function(req, res, next) {
+  sql_operation.query(`select * from iris`,data=>{
+    res.send(data);
+  });
+});
+
 router.get("/f1_graph_data", function(req, res, next) {
   let graph_cluster0 = {'nodes': [{'name': '好利来食品店', 'value': 0.178842}, {'name': '第一食堂', 'value': 0.196927}, {'name': '第三食堂', 'value': 0.207959}, {'name': '第二食堂', 'value': 0.384279}, {'name': '第五食堂', 'value': 0.360047}, {'name': '第四食堂', 'value': 0.271395}, {'name': '红太阳超市', 'value': 0.063593}, {'name': '财务处', 'value': 0.14207999999999998}], 'links': [{'source': '第三食堂', 'target': '好利来食品店', 'value': 0.062175}, {'source': '第五食堂', 'target': '好利来食品店', 'value': 0.097518}, {'source': '第二食堂', 'target': '第一食堂', 'value': 0.117415}, {'source': '第四食堂', 'target': '第一食堂', 'value': 0.06414500000000001}, {'source': '第三食堂', 'target': '第五食堂', 'value': 0.092356}, {'source': '第二食堂', 'target': '第四食堂', 'value': 0.134634}, {'source': '第二食堂', 'target': '财务处', 'value': 0.053349}, {'source': '财务处', 'target': '第五食堂', 'value': 0.052561000000000004}]};
   let graph_cluster1 = {'nodes': [{'name': '好利来食品店', 'value': 0.16961099999999998}, {'name': '第一食堂', 'value': 0.154704}, {'name': '第三食堂', 'value': 0.184187}, {'name': '第二食堂', 'value': 0.292292}, {'name': '第五食堂', 'value': 0.329284}, {'name': '第四食堂', 'value': 0.207155}, {'name': '红太阳超市', 'value': 0.039311}, {'name': '财务处', 'value': 0.069125}], 'links': [{'source': '第三食堂', 'target': '好利来食品店', 'value': 0.04439}, {'source': '第二食堂', 'target': '好利来食品店', 'value': 0.012036}, {'source': '第五食堂', 'target': '好利来食品店', 'value': 0.067248}, {'source': '好利来食品店', 'target': '第四食堂', 'value': 0.018662}, {'source': '第二食堂', 'target': '第一食堂', 'value': 0.074205}, {'source': '第一食堂', 'target': '第四食堂', 'value': 0.036108999999999995}, {'source': '第一食堂', 'target': '红太阳超市', 'value': 0.012809000000000001}, {'source': '第五食堂', 'target': '第三食堂', 'value': 0.052341}, {'source': '财务处', 'target': '第三食堂', 'value': 0.013472}, {'source': '第二食堂', 'target': '第五食堂', 'value': 0.017116}, {'source': '第二食堂', 'target': '第四食堂', 'value': 0.067138}, {'source': '第二食堂', 'target': '红太阳超市', 'value': 0.020318}, {'source': '第二食堂', 'target': '财务处', 'value': 0.018883}, {'source': '第五食堂', 'target': '第四食堂', 'value': 0.021863999999999998}, {'source': '第五食堂', 'target': '财务处', 'value': 0.020649}, {'source': '第四食堂', 'target': '红太阳超市', 'value': 0.014024000000000002}, {'source': '财务处', 'target': '第四食堂', 'value': 0.018993}]}
@@ -201,6 +207,32 @@ router.get("/test_data", function(req, res, next) {
 
 });
 
+router.get("/f4_network_data", function(req, res, next) {
+  sql_operation.query(`select * from network_13`,data=>{
+    data = data.slice(100)
+    let nodes = [];
+    data.forEach(d=>{
+      if(nodes.findIndex(x=>x.id === d.source) !== -1 ){}
+      else{
+        nodes.push({id:d.source,rank:d.source_rank,clique:d.source_clique})
+      }
+      if(nodes.findIndex(x=>x.id === d.target) !== -1 ){}
+      else{
+        nodes.push({id:d.target,rank:d.target_rank,clique:d.target_clique})
+      }
+    });
 
+    res.send({
+      nodes:nodes,
+      links:data.map(d=>{
+        return {
+          'source':d.source,
+          'target':d.target,
+          'value':d.value
+        }
+      })
+    });
+  });
+});
 
 module.exports = router;

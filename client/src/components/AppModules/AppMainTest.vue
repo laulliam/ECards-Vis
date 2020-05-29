@@ -107,7 +107,7 @@
         let radial_area = {}
 
         radial_area.innerRadius = 20
-        radial_area.outerRadius = 70
+        radial_area.outerRadius = 60
 
         radial_area.x = d3.scaleUtc()
           .domain([Date.UTC(2000, 0, 1), Date.UTC(2001, 0, 1) - 1])
