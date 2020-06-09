@@ -41,8 +41,136 @@
         this.Init(res1.data,res2.data)
       }))
 
+      // DataManager.get_test_data().then(res=>{
+      //   res.data.forEach(d=>{
+      //     d.date = d3.timeParse('%Y-%m-%d')(d.date)
+      //   })
+      //
+      //   this.Test(res.data);
+      // })
+
     },
     methods:{
+      Test(data){
+        let width = document.getElementById('main_chart').offsetWidth;
+        let height = document.getElementById('main_chart').offsetHeight;
+
+        let svg = d3.select('#main_chart').append("svg")
+          // .attr('width',width)
+          // .attr('height',height)
+          .attr("viewBox", [-width / 2, -height / 2, width, height])
+          .attr("stroke-linejoin", "round")
+          .attr("stroke-linecap", "round");
+
+        let radial_area = {}
+
+        radial_area.innerRadius = 40
+        radial_area.outerRadius = 200
+
+        radial_area.x = d3.scaleUtc()
+          .domain([Date.UTC(2000, 0, 1), Date.UTC(2001, 0, 1) - 1])
+          .range([0, Math.PI])
+        //
+        radial_area.y = d3.scaleLinear()
+          .domain([d3.min(data, d => d.minmin), d3.max(data, d => d.maxmax)])
+          .range([radial_area.innerRadius, radial_area.outerRadius])
+
+        radial_area.xAxis = g => g
+          .attr("font-family", "sans-serif")
+          .attr("font-size", 10)
+          .call(g => g.selectAll("g")
+            .data(radial_area.x.ticks())
+            .join("g")
+            .each((d, i) => {
+              d.id = i
+            })
+            .call(g => g.append("path")
+              .attr("stroke", "#565656")
+              .attr("stroke-opacity", 0.1)
+              .attr("d", d => `
+              M${d3.pointRadial(radial_area.x(d), radial_area.innerRadius)}
+              L${d3.pointRadial(radial_area.x(d), radial_area.outerRadius)}
+            `))
+            .call(g => g.append("path")
+              .attr("id", d => d.id.id)
+              .datum(d => [d, d3.utcMonth.offset(d, 1)])
+              .attr("fill", "none")
+              .attr("d", ([a, b]) => `
+              M${d3.pointRadial(radial_area.x(a), radial_area.innerRadius)}
+              A${radial_area.innerRadius},${radial_area.innerRadius} 0,0,1 ${d3.pointRadial(radial_area.x(b), radial_area.innerRadius)}
+            `))
+            .call(g => g.append("text")
+              .append("textPath")
+              .attr("startOffset", 6)
+              .attr("xlink:href", d => d.id.href)
+              .text(d3.utcFormat("%B"))))
+
+        radial_area.yAxis = g => g
+          .attr("text-anchor", "middle")
+          .attr("font-family", "sans-serif")
+          .attr("font-size", 10)
+          .call(g => g.selectAll("g")
+            .data(radial_area['y'].ticks().reverse())
+            .join("g")
+            .attr("fill", "none")
+            .call(g => g.append("circle")
+              .attr("stroke", "#565656")
+              .attr("stroke-opacity", 0.1)
+              .attr("r", radial_area.y)))
+        // .call(g => g.append("text")
+        //   .attr("y", d => -y(d))
+        //   .attr("dy", "0.35em")
+        //   .attr("stroke", "#fff")
+        //   .attr("stroke-width", 5)
+        //   .text((x, i) => `${x.toFixed(0)}${i ? "" : "°F"}`)
+        //   .clone(true)
+        //   .attr("y", d => y(d))
+        //   .selectAll(function () {
+        //     return [this, this.previousSibling];
+        //   })
+        //   .clone(true)
+        //   .attr("fill", "currentColor")
+        //   .attr("stroke", "none")))
+
+        radial_area.line = d3.lineRadial()
+          .curve(d3.curveLinearClosed)
+          .angle(d => radial_area.x(d.date))
+
+        radial_area.area = d3.areaRadial()
+          .curve(d3.curveLinearClosed)
+          .angle(d => radial_area.x(d.date))
+
+        svg.append("path")
+          .attr("fill", "lightsteelblue")
+          .attr("fill-opacity", 0.2)
+          .attr("d", radial_area.area
+            .innerRadius(d => radial_area.y(d.minmin))
+            .outerRadius(d => radial_area.y(d.maxmax))
+            (data));
+
+        svg.append("path")
+          .attr("fill", "steelblue")
+          .attr("fill-opacity", 0.2)
+          .attr("d", radial_area.area
+            .innerRadius(d => radial_area.y(d.min))
+            .outerRadius(d => radial_area.y(d.max))
+            (data));
+
+        svg.append("path")
+          .attr("fill", "none")
+          .attr("stroke", "steelblue")
+          .attr("stroke-width", 1.5)
+          .attr("d", radial_area.line
+            .radius(d => radial_area.y(d.avg))
+            (data));
+
+        svg.append("g")
+          .call(radial_area.xAxis);
+
+        svg.append("g")
+          .call(radial_area.yAxis);
+
+      },
       Init(geoJson,data) {
 
         data.forEach(d=>{

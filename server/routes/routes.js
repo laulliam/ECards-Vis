@@ -9,16 +9,16 @@ var sql_operation = require("./operation");
 router.get("/f1_cluster_data", function(req, res, next) {
   sql_operation.query(`select cluster from cluster_data`,data=>{
     let povertyIndex = {
-      1:'P9',
-      2:'P8',
-      7:'P7',
-      4:'P6',
-      0:'P5',
-      3:'P4',
-      9:'P3',
+      6:'P9',
+      7:'P8',
+      4:'P7',
+      8:'P6',
+      1:'P5',
+      9:'P4',
+      0:'P3',
       5:'P2',
-      6:'P1',
-      8:'P0'
+      3:'P1',
+      2:'P0'
     };
     data = d3.nest().key(d=>d.cluster).entries(data).map(d=>{
       return {
@@ -209,7 +209,7 @@ router.get("/test_data", function(req, res, next) {
 
 router.get("/f4_network_data", function(req, res, next) {
   sql_operation.query(`select * from network_13`,data=>{
-    data = data.slice(100)
+    data = data.slice(0,100)
     let nodes = [];
     data.forEach(d=>{
       if(nodes.findIndex(x=>x.id === d.source) !== -1 ){}

@@ -35,13 +35,13 @@
 
           let test_data = [];
 
-          for (let i = 1;i<=30;i++)
+          for (let i = 1;i<=7;i++)
             for(let j = 0 ;j<24;j++)
               test_data.push({day:i,hour:j,value:Math.random()*50})
 
           let x = d3.scaleBand()
             .range([ 0, width ])
-            .domain(new Array(30).fill(0).map((d,i)=>i+1))
+            .domain(new Array(7).fill(0).map((d,i)=>i+1))
             .padding(0.05)     // This is important: it is the space between 2 groups. 0 means no padding. 1 is the maximum.
 
           let y = d3.scaleLinear()

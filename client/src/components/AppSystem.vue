@@ -2,14 +2,14 @@
   <div id="system">
     <Card id="card" :style="{margin: '50px 5px 0 5px', background: '#fff', minHeight: '92.5vh'}">
       <div id="container">
-        <AppPie></AppPie>
+<!--        <AppPie></AppPie>-->
         <AppMainTest></AppMainTest>
 <!--        <AppMain></AppMain>-->
-        <AppParallel></AppParallel>
-        <AppThemeRiver></AppThemeRiver>
-        <AppTest02></AppTest02>
-        <AppTest03></AppTest03>
-        <AppTest04></AppTest04>
+<!--        <AppParallel></AppParallel>-->
+<!--        <AppThemeRiver></AppThemeRiver>-->
+<!--        <AppTest02></AppTest02>-->
+<!--        <AppTest03></AppTest03>-->
+<!--        <AppTest04></AppTest04>-->
         <AppTest05></AppTest05>
       </div>
     </Card>
@@ -22,7 +22,7 @@
   import AppParallel from "./AppModules/AppParallel";
   import AppThemeRiver from "./AppModules/AppThemeRiver";
   import AppTest02 from "./AppModules/AppTest02";
-  import AppTest03 from "./AppModules/AppTest03";
+  // import AppTest03 from "./AppModules/AppTest03";
   import AppTest04 from "./AppModules/AppTest04";
   import AppTest05 from "./AppModules/AppTest05";
   export default {
@@ -38,7 +38,7 @@
       AppParallel,
       AppThemeRiver,
       AppTest02,
-      AppTest03,
+      // AppTest03,
       AppTest04,
       AppTest05
     }
