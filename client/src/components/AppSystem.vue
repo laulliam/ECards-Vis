@@ -7,10 +7,10 @@
 <!--        <AppMain></AppMain>-->
 <!--        <AppParallel></AppParallel>-->
 <!--        <AppThemeRiver></AppThemeRiver>-->
-<!--        <AppTest02></AppTest02>-->
+        <AppTest02></AppTest02>
 <!--        <AppTest03></AppTest03>-->
 <!--        <AppTest04></AppTest04>-->
-        <AppTest05></AppTest05>
+<!--        <AppTest05></AppTest05>-->
       </div>
     </Card>
   </div>

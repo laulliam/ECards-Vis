@@ -38,8 +38,12 @@ export default class DataManager {
     return axios.get('test_data');
   }
 
-  static get_test_data1() {
-    return axios.get('test_data1');
+  static get_meal_data() {
+    return axios.get('meal_data');
+  }
+
+  static get_meal_dept_data() {
+    return axios.get('meal_dept');
   }
 
   static get_f1_iris_data() {

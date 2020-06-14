@@ -7,7 +7,7 @@
       <Content>
         <AppSystem></AppSystem>
       </Content>
-<!--      <Footer class="layout-footer-center">2020-2021 &copy; DATA-VIS</Footer>-->
+      <Footer class="layout-footer-center">2020-2021 &copy; DATA-VIS</Footer>
     </Layout>
   </div>
 </template>

@@ -5,9 +5,10 @@ class MysqlPool {
         this.flag = true;
         this.pool = mysql.createPool({
             //connectionLimit: 100,
-            host:'localhost',
+            // host:'localhost',
+            host:'10.10.4.27',
             user:'root',
-            password:'lelliam',
+            password:'123456',
             database:'ecards_db',
             port:3306,
             multipleStatements: true
