@@ -23,12 +23,16 @@
         name: "AppMainTest",
         data(){
             return {
+                value: 20,
+                marks: {
+
+                },
                 sites:[
-                    {name:'第一食堂','name_':'C1',coordinate:[120.4938882,31.9257250105]},
-                    {name:'第二食堂','name_':'C2',coordinate:[120.643338882,31.8987250105]},
-                    {name:'第四食堂','name_':'C4',coordinate:[120.583338882,31.817250105]},
-                    {name:'第三食堂','name_':'C3',coordinate:[120.743338882,31.877250105]},
-                    {name:'第五食堂','name_':'C5',coordinate:[120.623338882,31.977250105]},
+                    {name:'第一食堂','name_':'C1',coordinate:[120.4478882,31.9557250105]},
+                    {name:'第二食堂','name_':'C2',coordinate:[120.613338882,31.8987250105]},
+                    {name:'第四食堂','name_':'C4',coordinate:[120.651338882,31.817250105]},
+                    {name:'第三食堂','name_':'C3',coordinate:[120.793338882,31.877250105]},
+                    {name:'第五食堂','name_':'C5',coordinate:[120.723338882,31.977250105]},
                     // {name:'好利来食品店','name_':'S2',coordinate:[120.743338882,31.9487250105]},
                     // {name:'红太阳超市','name_':'S1',coordinate:[120.5738882,31.87087250105]},
                     // {name:'财务处','name_':'FO',coordinate:[120.5738882,31.93087250105]},
@@ -38,8 +42,8 @@
         mounted() {
 
             this.Init_Title();
-            this.$axios.all([DataManager.get_f1_geoJson_data(),DataManager.get_meal_data(),DataManager.get_meal_dept_data()]).then(this.$axios.spread((res1,res2,res3)=>{
-                this.Init(res1.data,res2.data,res3.data)
+            this.$axios.all([DataManager.get_f1_geoJson_data(),DataManager.get_meal_data(),DataManager.get_meal_dept_data(),DataManager.get_meal_dept_pro()]).then(this.$axios.spread((res1,res2,res3,res4)=>{
+                this.Init(res1.data,res2.data,res3.data,res4.data)
             }))
 
         },
@@ -63,7 +67,7 @@
                 title_div.style.transform = 'rotate(-90deg)';
 
             },
-            Init(geoJson,data_,dept_data) {
+            Init(geoJson,data_,dept_data,dept_data_pro) {
 
                 let data = d3.nest().key(d=>d.dept).entries(data_)
 
@@ -94,7 +98,7 @@
                 let map_chart = {}
 
                 map_chart.projection = d3.geoMercator()
-                    .fitSize([width, height],geoJson);
+                    .fitSize([width-50, height-50],geoJson);
 
                 map_chart.path = d3.geoPath().projection(map_chart.projection);
 
@@ -127,14 +131,14 @@
                     let radial_area = {}
 
                     radial_area.innerRadius = 20
-                    radial_area.outerRadius = 50
+                    radial_area.outerRadius = 70
 
                     radial_area.x = d3.scaleUtc()
                         .domain(d3.extent(data_, d => d3.timeParse('%H:%M:%S')(d.time)))
                         .range([0, 2 * Math.PI])
                     //
                     radial_area.y = d3.scaleLinear()
-                        .domain(d3.extent(data_, d => parseInt(d.avg)))
+                        .domain(d3.extent(data_, d => parseInt(d.max)))
                         .range([radial_area.innerRadius, radial_area.outerRadius])
 
                     radial_area.xAxis = g => g
@@ -194,11 +198,11 @@
                     //   .attr("stroke", "none")))
 
                     radial_area.line = d3.lineRadial()
-                        .curve(d3.curveBasis)
+                        .curve(d3.curveBasisOpen)
                         .angle(d => radial_area.x(d3.timeParse('%H:%M:%S')(d.time)))
 
                     radial_area.area = d3.areaRadial()
-                        .curve(d3.curveBasis)
+                        .curve(d3.curveBasisOpen)
                         .angle(d => radial_area.x(d3.timeParse('%H:%M:%S')(d.time)))
 
 
@@ -238,12 +242,18 @@
                     //         (data[i].values))
 
                     //
-                    sites.append("path")
+                    sites.append('g')
+                        .append("path")
                         .attr("fill", "none")
                         .attr("stroke", "#15c225")
                         .attr("stroke-width", .8)
                         .attr("d", (d, i) => radial_area.line.radius(d => radial_area.y(parseInt(d.avg)))
                         (data.filter(s => s.key === d.name_)[0].values))
+
+                    sites.append('text')
+                        .attr('text-anchor',"middle")
+                         .attr('dy','.35em')
+                        .text(d=>d.name_)
 
 
                     //
@@ -265,38 +275,64 @@
                 let radial_stacked =()=> {
 
                     let radial_stacked = {}
-                    // console.log(dept_data);
-                    let test = d3.nest().key(d=>d.time).entries(dept_data)
-                    console.log(test);
-                    radial_stacked.data = test.map((d, i) => {
+
+                    let canteen_data = d3.nest().key(d=>d.canteen).entries(dept_data)
+                    let canteen_data_pro = d3.nest().key(d=>d.canteen).entries(dept_data_pro)
+
+                    radial_stacked.data = canteen_data.map(d=>{
                         return {
-                            'State': 'S' + i,
-                            'A1': parseInt(d.values[0].value),
-                            'A2': parseInt(d.values[1].value),
-                            'A3': parseInt(d.values[2].value),
-                            'A4': parseInt(d.values[3].value),
-                            'A5': parseInt(d.values[4].value),
-                            'A6': parseInt(d.values[5].value),
-                            'A7': parseInt(d.values[6].value),
-                            'A8': parseInt(d.values[7].value),
-                            total: d3.sum(d.values, d => parseInt(d.value))
+                            'key':d.key,
+                            'values':d3.nest().key(d=>d.time).entries(d.values).map((d, i) => {
+                                return {
+                                    'State': 'S' + i,
+                                    'A1': parseInt(d.values[0].value),
+                                    'A2': parseInt(d.values[1].value),
+                                    'A3': parseInt(d.values[2].value),
+                                    'A4': parseInt(d.values[3].value),
+                                    'A5': parseInt(d.values[4].value),
+                                    'A6': parseInt(d.values[5].value),
+                                    'A7': parseInt(d.values[6].value),
+                                    'A8': parseInt(d.values[7].value),
+                                    total: d3.sum(d.values, d => parseInt(d.value))
+                                }
+                            })
                         }
                     })
 
+                    radial_stacked.data_pro = canteen_data_pro.map(d=>{
+                        return {
+                            'key':d.key,
+                            'values':d3.nest().key(d=>d.time).entries(d.values).map((d, i) => {
+                                return {
+                                    'State': 'S' + i,
+                                    'A1': parseInt(d.values[0].value),
+                                    'A2': parseInt(d.values[1].value),
+                                    'A3': parseInt(d.values[2].value),
+                                    'A4': parseInt(d.values[3].value),
+                                    'A5': parseInt(d.values[4].value),
+                                    'A6': parseInt(d.values[5].value),
+                                    'A7': parseInt(d.values[6].value),
+                                    'A8': parseInt(d.values[7].value),
+                                    total: d3.sum(d.values, d => parseInt(d.value))
+                                }
+                            })
+                        }
+                    })
 
-
-                    radial_stacked.innerRadius = 45
-                    radial_stacked.outerRadius = 90
+                    radial_stacked.innerRadius = 50
+                    radial_stacked.outerRadius = 100
 
                     radial_stacked.x = d3.scaleBand()
-                        .domain(radial_stacked.data.map(d => d.State))
+                        .domain(radial_stacked.data[0].values.map(d => d.State))
                         .range([0, 2 * Math.PI])
                         .align(0)
 
+                    let max = d3.max(radial_stacked.data,d=>d3.max(d.values,s=>s.total))
+
                     radial_stacked.y = Object.assign(d => Math.sqrt(d3.scaleLinear()
-                        .domain([0, d3.max(radial_stacked.data, d => d.total)])
+                        .domain([0, max])
                         .range([radial_stacked.innerRadius * radial_stacked.innerRadius, radial_stacked.outerRadius * radial_stacked.outerRadius])(d)), d3.scaleLinear()
-                        .domain([0, d3.max(radial_stacked.data, d => d.total)])
+                        .domain([0, max])
                         .range([radial_stacked.innerRadius * radial_stacked.innerRadius, radial_stacked.outerRadius * radial_stacked.outerRadius]));
 
                     radial_stacked.z = d3.scaleOrdinal()
@@ -320,14 +356,28 @@
                         .padAngle(0.01)
                         .padRadius(radial_stacked.innerRadius)
 
-                    sites.call(g => g.selectAll(".radial_stacked")
-                        .data(d3.stack().keys(['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8'])(radial_stacked.data))
-                        .join("g")
+                    // sites.call(g => g.selectAll(".radial_stacked")
+                    //     .data(d3.stack().keys(['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8'])(radial_stacked.data[0].values))
+                    //     .join("g")
+                    //     .attr("fill", d => radial_stacked.z(d.key))
+                    //     .selectAll("path")
+                    //     .data(d => d)
+                    //     .join("path")
+                    //     .attr("d", radial_stacked.arc))
+
+                    sites.selectAll(".radial_stacked1")
+                        .data(d=>d3.stack().keys(['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8'])(radial_stacked.data.filter(s => s.key === d.name_)[0].values))
+                        .join('g')
+                        .attr('class','radial_stacked1')
                         .attr("fill", d => radial_stacked.z(d.key))
+                        // .attr("fill", '#ccc')
+                        .attr("opacity", 0.7)
                         .selectAll("path")
                         .data(d => d)
                         .join("path")
-                        .attr("d", radial_stacked.arc))
+                        .attr("d", radial_stacked.arc);
+
+
 
                     let legend = g => g.append("g")
                         .selectAll("g")
@@ -337,7 +387,19 @@
                         .call(g => g.append("rect")
                             .attr("width", 18)
                             .attr("height", 8)
-                            .attr("fill", radial_stacked.z))
+                            .attr("fill", radial_stacked.z)
+                            .on('click',d=>{
+                                // d3.selectAll('.radial_stacked').remove();
+                                sites.selectAll(".radial_stacked")
+                                    .data(d=>d3.stack().keys(['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8'])(radial_stacked.data_pro.filter(s => s.key === d.name_)[0].values))
+                                    .join('g')
+                                    .attr('class','radial_stacked')
+                                    .attr("fill", d => radial_stacked.z(d.key))
+                                    .selectAll("path")
+                                    .data(d => d)
+                                    .join("path")
+                                    .attr("d", radial_stacked.arc);
+                            }))
                         .call(g => g.append("text")
                             .attr("x", 24)
                             .attr("y", 5)
@@ -397,5 +459,14 @@
     height: 200px;
     z-index: 20;
     /*background-color: red;*/
+  }
+
+  #tool_slider{
+    position: absolute;
+    right: 0;
+    bottom: 60px;
+    width: 300px;
+    height: 170px;
+    z-index: 20;
   }
 </style>

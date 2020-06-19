@@ -212,10 +212,17 @@ router.get("/meal_data", function(req, res, next) {
 });
 
 router.get("/meal_dept", function(req, res, next) {
-  sql_operation.query(`select * from meal_dept`,data=>{
+  sql_operation.query(`select * from canteen_dept_20min`,data=>{
     res.send(data);
   });
 });
+
+router.get("/meal_dept_pro", function(req, res, next) {
+  sql_operation.query(`select * from canteen_dept_20min_pro`,data=>{
+    res.send(data);
+  });
+});
+
 
 router.get("/f4_network_data", function(req, res, next) {
   sql_operation.query(`select * from network_13`,data=>{

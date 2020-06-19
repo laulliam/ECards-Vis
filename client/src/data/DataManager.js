@@ -46,6 +46,10 @@ export default class DataManager {
     return axios.get('meal_dept');
   }
 
+  static get_meal_dept_pro() {
+    return axios.get('meal_dept_pro');
+  }
+
   static get_f1_iris_data() {
     return axios.get('f1_iris_data');
   }
