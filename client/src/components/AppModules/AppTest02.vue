@@ -17,7 +17,7 @@
             // })
             // this.RosePie()
             // this.Calendar()
-            this.Circular_heat()
+            // this.Circular_heat()
             // DataManager.get_meal_dept_data().then(res=>{
             //     this.Stacked_Bar(res.data)
             // })

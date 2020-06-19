@@ -29,7 +29,7 @@
                 },
                 sites:[
                     {name:'第一食堂','name_':'C1',coordinate:[120.4478882,31.9557250105]},
-                    {name:'第二食堂','name_':'C2',coordinate:[120.613338882,31.8987250105]},
+                    {name:'第二食堂','name_':'C2',coordinate:[120.613338882,31.925250105]},
                     {name:'第四食堂','name_':'C4',coordinate:[120.651338882,31.817250105]},
                     {name:'第三食堂','name_':'C3',coordinate:[120.793338882,31.877250105]},
                     {name:'第五食堂','name_':'C5',coordinate:[120.723338882,31.977250105]},
@@ -370,8 +370,6 @@
                         .join('g')
                         .attr('class','radial_stacked1')
                         .attr("fill", d => radial_stacked.z(d.key))
-                        // .attr("fill", '#ccc')
-                        .attr("opacity", 0.7)
                         .selectAll("path")
                         .data(d => d)
                         .join("path")
@@ -389,7 +387,11 @@
                             .attr("height", 8)
                             .attr("fill", radial_stacked.z)
                             .on('click',d=>{
-                                // d3.selectAll('.radial_stacked').remove();
+                                sites.selectAll('.radial_stacked1')
+                                    .selectAll('path')
+                                    .attr("fill", '#ccc')
+                                    .attr("opacity", 0.7);
+
                                 sites.selectAll(".radial_stacked")
                                     .data(d=>d3.stack().keys(['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8'])(radial_stacked.data_pro.filter(s => s.key === d.name_)[0].values))
                                     .join('g')
@@ -398,6 +400,9 @@
                                     .selectAll("path")
                                     .data(d => d)
                                     .join("path")
+                                    // .attr('stroke','#787878')
+                                    // .attr('stroke-opacity',.1)
+                                    // .attr('stroke-width',.5)
                                     .attr("d", radial_stacked.arc);
                             }))
                         .call(g => g.append("text")
