@@ -35,12 +35,12 @@
             }
           },
           legend: {
-            left: 8,
+            left: '5%',
             top:52,
             icon:'rect',
             itemWidth:20 ,
-            itemHeight:3,
-            itemGap:5.13,
+            itemHeight:5,
+            itemGap:14,
             orient:'vertical',
             align:'right',
             textStyle: {

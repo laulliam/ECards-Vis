@@ -226,7 +226,9 @@ router.get("/meal_dept_pro", function(req, res, next) {
 
 router.get("/f4_network_data", function(req, res, next) {
   sql_operation.query(`select * from network_13`,data=>{
-    data = data.slice(0,100)
+
+    // data = data.filter(d=>parseInt(d.value) > 5)
+    data = data.slice(0,200)
     let nodes = [];
     data.forEach(d=>{
       if(nodes.findIndex(x=>x.id === d.source) !== -1 ){}

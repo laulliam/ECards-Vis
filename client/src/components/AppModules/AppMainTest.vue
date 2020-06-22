@@ -319,8 +319,8 @@
                         }
                     })
 
-                    radial_stacked.innerRadius = 50
-                    radial_stacked.outerRadius = 100
+                    radial_stacked.innerRadius = 70
+                    radial_stacked.outerRadius = 150
 
                     radial_stacked.x = d3.scaleBand()
                         .domain(radial_stacked.data[0].values.map(d => d.State))

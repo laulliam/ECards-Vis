@@ -20,7 +20,7 @@ Vue.use(Resource);
 Vue.use(ViewUI);
 
 axios.defaults.baseURL = 'http://localhost:3000/';
-Vue.http.options.root = 'http://localhost:3000/';
+// Vue.http.options.root = 'http://localhost:3000/';
 Vue.http.options.emulateJson = true;
 
 /* eslint-disable no-new */

@@ -17,7 +17,7 @@
             // })
             // this.RosePie()
             // this.Calendar()
-            // this.Circular_heat()
+            this.Circular_heat()
             // DataManager.get_meal_dept_data().then(res=>{
             //     this.Stacked_Bar(res.data)
             // })
@@ -40,48 +40,38 @@
 
                 let test = {
                     nodes:[
-                        {name:'C1_old',itemStyle:{color:'#f77d8c',"borderColor":'#fff'}},{name:'C2_old',itemStyle:{color:'#f77d8c',"borderColor":'#fff'}},
-                        {name:'C3_old',itemStyle:{color:'#f77d8c',"borderColor":'#fff'}},{name:'C4_old',itemStyle:{color:'#f77d8c',"borderColor":'#fff'}},
-                        {name:'C5_old',itemStyle:{color:'#f77d8c',"borderColor":'#fff'}},
-
-                        {name:'C1_new'},{name:'C2_new'},{name:'C3_new'},{name:'C4_new'},{name:'C5_new'},
+                        {name:'C1',itemStyle:{color:'#f77d8c',}},{name:'C2',itemStyle:{color:'#f77d8c',}},
+                        {name:'C3',itemStyle:{color:'#f77d8c',}},{name:'C4',itemStyle:{color:'#f77d8c',}},
+                        {name:'C5',itemStyle:{color:'#f77d8c',}},
                         {name:'A1',itemStyle:{color:color('A1')}},{name:'A2',itemStyle:{color:color('A2')}},{name:'A3',itemStyle:{color:color('A3')}},{name:'A4',itemStyle:{color:color('A4')}},
                         {name:'A5',itemStyle:{color:color('A5')}},{name:'A6',itemStyle:{color:color('A6')}},{name:'A7',itemStyle:{color:color('A7')}},{name:'A8',itemStyle:{color:color('A8')}}],
                     links:[
-                        {'source': 'C1_old', 'target': 'A1', 'value': 145}, {'source': 'C1_old', 'target': 'A2', 'value': 127},
-                        {'source': 'C1_old', 'target': 'A3', 'value': 19}, {'source': 'C1_old', 'target': 'A4', 'value': 50},
-                        {'source': 'C1_old', 'target': 'A5', 'value': 147}, {'source': 'C1_old', 'target': 'A6', 'value': 102},
-                        {'source': 'C1_old', 'target': 'A7', 'value': 9}, {'source': 'C1_old', 'target': 'A8', 'value': 122},
-                        {'source': 'C2_old', 'target': 'A1', 'value': 174}, {'source': 'C2_old', 'target': 'A2', 'value': 196},
-                        {'source': 'C2_old', 'target': 'A3', 'value': 29}, {'source': 'C2_old', 'target': 'A4', 'value': 81},
-                        {'source': 'C2_old', 'target': 'A5', 'value': 308}, {'source': 'C2_old', 'target': 'A6', 'value': 154},
-                        {'source': 'C2_old', 'target': 'A7', 'value': 8}, {'source': 'C2_old', 'target': 'A8', 'value': 195},
-                        {'source': 'C3_old', 'target': 'A1', 'value': 66}, {'source': 'C3_old', 'target': 'A2', 'value': 195},
-                        {'source': 'C3_old', 'target': 'A3', 'value': 44}, {'source': 'C3_old', 'target': 'A4', 'value': 142},
-                        {'source': 'C3_old', 'target': 'A5', 'value': 21}, {'source': 'C3_old', 'target': 'A6', 'value': 13},
-                        {'source': 'C3_old', 'target': 'A7', 'value': 21}, {'source': 'C3_old', 'target': 'A8', 'value': 54},
-                        {'source': 'C4_old', 'target': 'A1', 'value': 149}, {'source': 'C4_old', 'target': 'A2', 'value': 176},
-                        {'source': 'C4_old', 'target': 'A3', 'value': 29}, {'source': 'C4_old', 'target': 'A4', 'value': 82},
-                        {'source': 'C4_old', 'target': 'A5', 'value': 242}, {'source': 'C4_old', 'target': 'A6', 'value': 121},
-                        {'source': 'C4_old', 'target': 'A7', 'value': 15}, {'source': 'C4_old', 'target': 'A8', 'value': 119},
-                        {'source': 'C5_old', 'target': 'A1', 'value': 120}, {'source': 'C5_old', 'target': 'A2', 'value': 386},
-                        {'source': 'C5_old', 'target': 'A3', 'value': 100}, {'source': 'C5_old', 'target': 'A4', 'value': 199},
-                        {'source': 'C5_old', 'target': 'A5', 'value': 46}, {'source': 'C5_old', 'target': 'A6', 'value': 11},
-                        {'source': 'C5_old', 'target': 'A7', 'value': 52}, {'source': 'C5_old', 'target': 'A8', 'value': 77},
-                        {source:'A1',target:'C1_new',value:50},
-                        {source:'A2',target:'C1_new',value:50},
-                        {source:'A3',target:'C2_new',value:50},
-                        {source:'A4',target:'C3_new',value:50},
-                        {source:'A5',target:'C4_new',value:50},
-                        {source:'A6',target:'C5_new',value:50},
-                        {source:'A7',target:'C1_new',value:50},
-                        {source:'A8',target:'C1_new',value:50},
+                        {'source': 'A1', 'target':'C1', 'value': 145}, {'source':'A2', 'target':'C1', 'value': 127},
+                        {'source': 'A3', 'target':'C1', 'value': 19},  {'source':'A4', 'target':'C1', 'value': 50},
+                        {'source': 'A5', 'target':'C1', 'value': 147}, {'source':'A6', 'target':'C1', 'value': 102},
+                        {'source': 'A7', 'target':'C1', 'value': 9},   {'source':'A8', 'target':'C1', 'value': 122},
+                        {'source': 'A1', 'target':'C2', 'value': 174}, {'source':'A2', 'target':'C2', 'value': 196},
+                        {'source': 'A3', 'target':'C2', 'value': 29},  {'source':'A4', 'target':'C2', 'value': 81},
+                        {'source': 'A5', 'target':'C2', 'value': 308}, {'source':'A6', 'target':'C2', 'value': 154},
+                        {'source': 'A7', 'target':'C2', 'value': 8},   {'source':'A8', 'target':'C2', 'value': 195},
+                        {'source': 'A1', 'target':'C3', 'value': 66},  {'source':'A2', 'target':'C3', 'value': 195},
+                        {'source': 'A3', 'target':'C3', 'value': 44},  {'source':'A4', 'target':'C3', 'value': 142},
+                        {'source': 'A5', 'target':'C3', 'value': 21},  {'source':'A6', 'target':'C3', 'value': 13},
+                        {'source': 'A7', 'target':'C3', 'value': 21},  {'source':'A8', 'target':'C3', 'value': 54},
+                        {'source': 'A1', 'target':'C4', 'value': 149}, {'source':'A2', 'target':'C4', 'value': 176},
+                        {'source': 'A3', 'target':'C4', 'value': 29},  {'source':'A4', 'target':'C4', 'value': 82},
+                        {'source': 'A5', 'target':'C4', 'value': 242}, {'source':'A6', 'target':'C4', 'value': 121},
+                        {'source': 'A7', 'target':'C4', 'value': 15},  {'source':'A8', 'target':'C4', 'value': 119},
+                        {'source': 'A1', 'target':'C5', 'value': 120}, {'source':'A2', 'target':'C5', 'value': 386},
+                        {'source': 'A3', 'target':'C5', 'value': 100}, {'source':'A4', 'target':'C5', 'value': 199},
+                        {'source': 'A5', 'target':'C5', 'value': 46},  {'source':'A6', 'target':'C5', 'value': 11},
+                        {'source': 'A7', 'target':'C5', 'value': 52},  {'source':'A8', 'target':'C5', 'value': 77}
                     ]
                 }
 
                 let option = {
                     title: {
-                        text: 'Sankey Diagram',
+                        text: 'THERE IS A TEXT',
                         textStyle:{
                             fontSize:16
                         }
@@ -95,13 +85,24 @@
                             type: 'sankey',
                             // orient: 'vertical',
                             data: test.nodes,
-                            top:'20%',
-                            bottom:'20%',
+                            top:'15%',
+                            bottom:'5%',
+                            right:'5%',
                             links: test.links,
                             focusNodeAdjacency: true,
                             lineStyle: {
                                 curveness: 0.5
-                            }
+                            },
+                            levels: [{
+                                depth: 0,
+                                itemStyle: {
+                                    color: '#fbb4ae'
+                                },
+                                lineStyle: {
+                                    color: '#ccc',
+                                    opacity: .6
+                                }
+                            }]
                         }
                     ]
                 }
@@ -402,7 +403,8 @@
                     },
                     animation: false,
                     grid: {
-                        top: '20%'
+                        top: '15%',
+                        bottom:'10%'
                     },
                     xAxis: {
                         type: 'category',
@@ -422,11 +424,17 @@
                         data: days,
                         splitArea: {
                             show: true
-                        }
+                        },
+                        // axisTick: {
+                        //     show: false
+                        // },
+                        axisLine: {
+                            show:false
+                        },
                     },
                     visualMap: {
                         inRange: {
-                            color: ['#fff', '#f73a35']
+                            color: ['#fff', '#8f3f60']
                         },
                         type: 'continuous',
                         min: 0,
@@ -437,16 +445,20 @@
                         borderColor:"#a8a8a8",
                         itemWidth:10,                          //图形的宽度，即长条的宽度。
                         itemHeight:55,                        //图形的高度，即长条的高度。
-                        right:0,
+                        right:'10%',
                         dimension: 2,
                         calculable: false
                     },
                     series: [{
                         name: 'Punch Card',
-                        type: 'heatmap',
+                        // type: 'heatmap',
                         data: data,
                         label: {
                             show: true
+                        },
+                        type: 'effectScatter',
+                        symbolSize: function (val) {
+                            return val[2]*3;
                         },
                         emphasis: {
                             itemStyle: {
@@ -847,7 +859,7 @@
 
   #rose_pie{
     position: absolute;
-    width: 30%;
+    width: 40%;
     height: 100%;
     /*background-color: indianred;*/
   }
@@ -855,8 +867,8 @@
   #calendar{
     position: absolute;
     top:0;
-    left: 30%;
-    width: 70%;
+    left: 40%;
+    width: 60%;
     height: 100%;
   }
 </style>

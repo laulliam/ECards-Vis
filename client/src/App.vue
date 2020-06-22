@@ -40,6 +40,34 @@
     font-size:12px;
   }
 
+  .ivu-slider-bar {
+    height: 4px;
+    background: #f77d8c;
+    border-radius: 3px;
+    position: absolute;
+  }
+  .ivu-slider-wrap {
+    /*align-items: center;*/
+    width: 70%;
+    left: 15%;
+    bottom:10%;
+  }
+
+  .ivu-slider-button {
+    width: 12px;
+    height: 12px;
+    border: 2px solid #f77d8c;
+    border-radius: 50%;
+    background-color: #fff;
+    transition: all .2s linear;
+    outline: 0;
+  }
+
+  .ivu-slider-button-dragging, .ivu-slider-button:focus, .ivu-slider-button:hover {
+    border-color: #f77d8c;
+    transform: scale(1.5);
+  }
+
   .axis line {
     stroke: #000;
   }

@@ -1,6 +1,16 @@
 <template>
   <div id="network">
     <div id="n_tool_title"></div>
+    <div id="legend">
+      <Tag color="#d0648a">A1</Tag>
+      <Tag color="#d07999">A2</Tag>
+      <Tag color="#f58db2">A3</Tag>
+      <Tag color="#f2b3c9">A4</Tag>
+      <Tag color="#f2c4bc">A5</Tag>
+      <Tag color="#dcf296">A6</Tag>
+      <Tag color="#b8f29c">A7</Tag>
+      <Tag color="#7bd9a5">A8</Tag>
+    </div>
     <div id="test04"></div>
   </div>
 </template>
@@ -36,6 +46,8 @@
             },
             Init(data){
 
+                console.log(data);
+
                 let width = document.getElementById('test04').offsetWidth;
                 let height = document.getElementById('test04').offsetHeight;
 
@@ -55,7 +67,6 @@
                     // .attr("viewBox", [-width / 2, -height / 2, width, height])
                     .attr("stroke-linejoin", "round")
                     .attr("stroke-linecap", "round")
-                    .call(zoom)
 
 
                 function zoomed() {
@@ -76,13 +87,13 @@
 
                 let simulation = d3.forceSimulation(data.nodes)
                     .force("link", d3.forceLink(data.links).id(d => d.id))
-                    .force("charge", d3.forceManyBody())
+                    .force("charge", d3.forceManyBody().distanceMax(100))
                     .force("collide", d3.forceCollide(10).strength(0.2).iterations(5))
-                    .force("center", d3.forceCenter(width / 2, height / 2));
+                    .force("center", d3.forceCenter(width / 2, height / 2))
 
                 let link = svg.append("g")
                     .attr("stroke", "#999")
-                    .attr("stroke-opacity", 0.6)
+                    .attr("stroke-opacity", 0.2)
                     .selectAll("line")
                     .data(data.links)
                     .join("line")
@@ -141,11 +152,11 @@
                     .append("path")
                     .attr('class','path')
                     .attr('fill',(d,i)=>['#d0619b','#4ea397'][i])
-                    .attr('opacity',.8)
+                    // .attr('opacity',.8)
                     // .attr('stroke','#cc2e15')
                     .attr("d", d3.arc()
                         .innerRadius(5)
-                        .outerRadius(7)
+                        .outerRadius(6)
                         .startAngle(function(d) { return angle(d); })
                         .endAngle(function(d) { return angle(d) + angle.bandwidth() /1.2; })))
 
@@ -195,6 +206,36 @@
 
                 });
 
+                let color = d3.scaleOrdinal()
+                    .domain(['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8'])
+                    .range([
+                        "#d0648a",
+                        "#d07999",
+                        "#f58db2",
+                        "#f2b3c9",
+                        "#f2c4bc",
+                        "#dcf296",
+                        "#b8f29c",
+                        "#7bd9a5"])
+
+                let legend = g => g.append("g")
+                    .selectAll("g")
+                    .data(['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8'])
+                    .join("g")
+                    .attr("transform", (d, i) => `translate(${(i - (8 - 1) / 2) * 30 + 300},10)`)
+                    .call(g => g.append("rect")
+                        .attr("width", 18)
+                        .attr("height", 8)
+                        .attr("fill", color)
+                    .call(g => g.append("text")
+                        .attr("x", 24)
+                        .attr("y", 5)
+                        .attr("dy", "0.35em")
+                        .attr('font-size','10px')
+                        .text(d => d)))
+
+                // svg.call(legend)
+
             }
         }
     }
@@ -204,7 +245,7 @@
   #network{
     position: absolute;
     right: 0;
-    top:0;
+    top: 25%;;
     width: 27%;
     height: 45%;
     overflow: hidden;
@@ -220,10 +261,17 @@
   #n_tool_title{
     position: absolute;
     left: 0;
-    top: 0;
     width: 300px;
     height: 50px;
     z-index: 20;
+    /*background-color: #ccc;*/
+  }
+
+  #legend{
+    position: absolute;
+    left: 200px;
+    width: 100%;
+    height: 50px;
     /*background-color: #ccc;*/
   }
 </style>
