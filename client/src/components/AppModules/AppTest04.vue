@@ -3,13 +3,13 @@
     <div id="n_tool_title"></div>
     <div id="legend">
       <Tag color="#d0648a">A1</Tag>
-      <Tag color="#d07999">A2</Tag>
-      <Tag color="#f58db2">A3</Tag>
-      <Tag color="#f2b3c9">A4</Tag>
-      <Tag color="#f2c4bc">A5</Tag>
-      <Tag color="#dcf296">A6</Tag>
-      <Tag color="#b8f29c">A7</Tag>
-      <Tag color="#7bd9a5">A8</Tag>
+      <Tag color="#ccc">A2</Tag>
+      <Tag color="#ccc">A3</Tag>
+      <Tag color="#ccc">A4</Tag>
+      <Tag color="#ccc">A5</Tag>
+      <Tag color="#ccc">A6</Tag>
+      <Tag color="#ccc">A7</Tag>
+      <Tag color="#ccc">A8</Tag>
     </div>
     <div id="test04"></div>
   </div>
@@ -35,7 +35,7 @@
 
                 let option = {
                     title: {
-                        text: 'THERE IS A TEXT',
+                        text: 'FRIENDSHIP NETWORK',
                         textStyle: {
                             fontSize: 16
                         }
@@ -45,8 +45,6 @@
                 chart.setOption(option)
             },
             Init(data){
-
-                console.log(data);
 
                 let width = document.getElementById('test04').offsetWidth;
                 let height = document.getElementById('test04').offsetHeight;
@@ -87,17 +85,17 @@
 
                 let simulation = d3.forceSimulation(data.nodes)
                     .force("link", d3.forceLink(data.links).id(d => d.id))
-                    .force("charge", d3.forceManyBody().distanceMax(100))
+                    .force("charge", d3.forceManyBody().strength(-60).distanceMax(30).distanceMin(5))
                     .force("collide", d3.forceCollide(10).strength(0.2).iterations(5))
                     .force("center", d3.forceCenter(width / 2, height / 2))
 
                 let link = svg.append("g")
                     .attr("stroke", "#999")
-                    .attr("stroke-opacity", 0.2)
+                    .attr("stroke-opacity", 0.6)
                     .selectAll("line")
                     .data(data.links)
                     .join("line")
-                    .attr("stroke-width", d => Math.sqrt(d.value));
+                    .attr("stroke-width", d => d.value/3);
 
                 let drag = simulation => {
 
@@ -151,7 +149,10 @@
                     .enter()
                     .append("path")
                     .attr('class','path')
-                    .attr('fill',(d,i)=>['#d0619b','#4ea397'][i])
+                    .attr('fill',(d,i)=>[
+                        ["#d0648a", "#d07999", "#f58db2"][Math.floor(Math.random()*3)],
+                        ["#4ea397","#22c3aa", "#7bd9a5",][Math.floor(Math.random()*3)]
+                    ][i])
                     // .attr('opacity',.8)
                     // .attr('stroke','#cc2e15')
                     .attr("d", d3.arc()
@@ -269,7 +270,7 @@
 
   #legend{
     position: absolute;
-    left: 200px;
+    left: 220px;
     width: 100%;
     height: 50px;
     /*background-color: #ccc;*/

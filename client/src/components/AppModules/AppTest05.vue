@@ -142,7 +142,7 @@
                 // .align(0)
 
                 node.call(g=>g.append('g').selectAll('.path')
-                    .data([1,2])
+                    .data([1,8])
                     .enter()
                     .append("path")
                     .attr('class','path')
@@ -152,8 +152,8 @@
                     .attr("d", d3.arc()
                         .innerRadius(5)
                         .outerRadius(6)
-                        .startAngle(function(d) { return angle(d); })
-                        .endAngle(function(d) { return angle(d) + angle.bandwidth() /1.2; })))
+                        .startAngle(function(d,i) { return i*Math.PI; })
+                        .endAngle(function(d,i) { return i*Math.PI + angle.bandwidth(); })))
             },
             Init_Radar(){
 

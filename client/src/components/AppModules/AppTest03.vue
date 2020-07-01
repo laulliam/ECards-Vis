@@ -1,28 +1,38 @@
 <template>
   <div id="test03">
     <div class="control">
-      &nbsp;THERE IS A TEXT
+      &nbsp;Frequent relationship
       <Slider v-model="value1" range></Slider>
     </div>
     <div class="control">
-      &nbsp;THERE IS A TEXT
-      <Slider v-model="value1" range></Slider>
+      &nbsp;Clustering coefficient
+      <Slider v-model="value2" range></Slider>
     </div>
     <div class="control">
-      &nbsp;THERE IS A TEXT
-      <Slider v-model="value1" range></Slider>
+      &nbsp;Degree centrality
+      <Slider v-model="value3" range></Slider>
     </div>
     <div class="control">
-      &nbsp;THERE IS A TEXT
-      <Slider v-model="value1" range></Slider>
+      &nbsp;Betweenness centrality
+      <Slider v-model="value4" range></Slider>
     </div>
     <div class="control">
-      &nbsp;THERE IS A TEXT
-      <Slider v-model="value1" range></Slider>
+      Orderliness
+      <Tag color="#fff"></Tag>
+      <Tag color="#d0619b"></Tag>
+      <Tag color="rgba(208,97,155,0.88)"></Tag>
+      <Tag color="rgba(208,97,155,0.76)"></Tag>
+      <Tag color="rgba(208,97,155,0.61)"></Tag>
+      <Tag color="rgba(208,97,155,0.38)"></Tag>
     </div>
     <div class="control">
-      &nbsp;THERE IS A TEXT
-      <Slider v-model="value1" range></Slider>
+      Diligence
+      <Tag color="#fff"></Tag>
+      <Tag color="#4ea397"></Tag>
+      <Tag color="rgba(78,163,151,0.91)"></Tag>
+      <Tag color="rgba(78,163,151,0.75)"></Tag>
+      <Tag color="rgba(78,163,151,0.53)"></Tag>
+      <Tag color="rgba(78,163,151,0.26)"></Tag>
     </div>
 
     <div id="c_tool_title"></div>
@@ -35,7 +45,10 @@
         name: "AppTest03",
         data(){
             return {
-                value1:[20,50]
+                value1:[20,50],
+                value2:[0,30],
+                value3:[15,40],
+                value4:[0,10]
             }
         },
         mounted() {
@@ -48,7 +61,7 @@
 
                 let option = {
                     title: {
-                        text: 'THERE IS A TEXT',
+                        text: 'CONTROL PANEL',
                         textStyle: {
                             fontSize: 16
                         }

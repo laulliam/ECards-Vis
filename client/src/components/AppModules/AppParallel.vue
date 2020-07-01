@@ -29,13 +29,13 @@
         let option = {
           backgroundColor: '#fff',
           title:{
-            text:'Poverty Parallel',
+            text:'PARALLEL COORDINATE',
             textStyle:{
               fontSize:16
             }
           },
           legend: {
-            left: '5%',
+            left: 8,
             top:52,
             icon:'rect',
             itemWidth:20 ,
@@ -44,8 +44,8 @@
             orient:'vertical',
             align:'right',
             textStyle: {
-              fontSize:9,
-              color:'rgba(204,204,204,0.98)'
+                fontSize:10,
+                color:'rgba(120,120,120,0.98)'
             },
             data:['P0','P1','P2','P3','P4','P5','P6','P7','P8','P9']
           },
@@ -58,9 +58,9 @@
             {dim: 5, name: 'CHARGE'}
           ],
           parallel: {
-            left: '12%',
+            left: '9%',
             right: '12%',
-            bottom:20,
+            bottom:10,
             parallelAxisDefault: {
               type: 'value',
               name: '',

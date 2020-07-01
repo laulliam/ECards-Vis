@@ -40,6 +40,22 @@
     font-size:12px;
   }
 
+  .ivu-tag-text{
+    font-size:9px;
+  }
+
+  .ivu-radio-checked .ivu-radio-inner {
+    border-color: #f77d8c;
+  }
+
+  .ivu-radio-checked:hover .ivu-radio-inner{
+    border-color: #f77d8c;
+  }
+
+  .ivu-radio-inner:after {
+    background-color: #f77d8c;
+  }
+
   .ivu-slider-bar {
     height: 4px;
     background: #f77d8c;

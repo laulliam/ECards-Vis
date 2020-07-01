@@ -34,21 +34,34 @@ export default class DataManager {
     return axios.get('f1_geoJson_data');
   }
 
-  static get_test_data() {
-    return axios.get('test_data');
+
+  static get_meal_default() {
+    return axios.get('meal_dept_default');
   }
 
-  static get_meal_data() {
-    return axios.get('meal_data');
+  static get_meal_quarter() {
+    return axios.get('meal_dept_quarter');
   }
 
-  static get_meal_dept_data() {
-    return axios.get('meal_dept');
+  static get_meal_half() {
+    return axios.get('meal_dept_half');
   }
 
-  static get_meal_dept_pro() {
-    return axios.get('meal_dept_pro');
+  static get_meal_dept_default() {
+    return axios.get('dept_20min_default');
   }
+
+  static get_meal_dept_quarter() {
+    return axios.get('dept_20min_quarter');
+  }
+
+  static get_meal_dept_half() {
+    return axios.get('dept_20min_half');
+  }
+
+  // static get_meal_dept_quarter() {
+  //   return axios.get('meal_dept_quarter');
+  // }
 
   static get_f1_iris_data() {
     return axios.get('f1_iris_data');

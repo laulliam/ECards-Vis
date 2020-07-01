@@ -256,7 +256,6 @@
 
                 let echarts = this.$echarts
 
-
                 function renderItem(params, api) {
                     let values = [api.value(0), api.value(1)];
                     let coord = api.coord(values);
@@ -393,7 +392,7 @@
 
                 let option = {
                     title:{
-                        text:'THERE IS A TEXT',
+                        text:'PREFERENCE MATRIX',
                         textStyle:{
                             fontSize:16
                         }
@@ -434,7 +433,7 @@
                     },
                     visualMap: {
                         inRange: {
-                            color: ['#fff', '#8f3f60']
+                            color: ['#fff', '#9d436a']
                         },
                         type: 'continuous',
                         min: 0,

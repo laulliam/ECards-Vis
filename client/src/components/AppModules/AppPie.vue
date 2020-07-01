@@ -62,8 +62,8 @@
                 //console.log(source);
                 let option = {
                     title:{
-                        text:'Poverty Distribution',
-                        subtext:'Notes: Poverty level is range from P0 to P9',
+                        text:'POVERTY CLUSTER',
+                        subtext:'Notes: Poverty levels increase from P0 to P9',
                         textStyle:{
                             fontSize:16
                         }
@@ -94,8 +94,8 @@
                         itemHeight:6,
                         itemGap:4,
                         textStyle:{
-                            fontSize:9,
-                            color:'rgba(204,204,204,0.98)'
+                            fontSize:10,
+                            color:'rgba(120,120,120,0.98)'
                         },
                         data:pie_data.map(d=>d.name).sort((a,b)=>{a.localeCompare(b)})
                     },
@@ -134,8 +134,8 @@
                     grid: [{
                         width:'40%',
                         height:'45%',
-                        x: '38%',
-                        y:'37%',
+                        x: '40%',
+                        y:'35%',
                         containLabel: true
                     },{
                         width:'20%',

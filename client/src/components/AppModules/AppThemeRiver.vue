@@ -17,23 +17,23 @@
 
                 let option = {
                     title:{
-                        text:'Average Daily Cost',
+                        text:'DAILY AVG COST',
                         textStyle:{
                             fontSize:16
                         }
                     },
                     legend: {
-                        left: 8,
-                        top:'25%',
+                        left: 5,
+                        top:'22%',
                         icon:'rect',
-                        itemWidth:8,
+                        itemWidth:10,
                         itemHeight:6,
-                        itemGap:5.13,
+                        itemGap:7,
                         orient:'vertical',
                         align:'right',
                         textStyle: {
-                            fontSize:9,
-                            color:'rgba(204,204,204,0.98)'
+                            fontSize:10,
+                            color:'rgba(120,120,120,0.98)'
                         },
                         data:['P0','P1','P2','P3','P4','P5','P6','P7','P8','P9']
                     },

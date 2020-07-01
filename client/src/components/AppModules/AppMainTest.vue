@@ -9,6 +9,26 @@
         </ButtonGroup>
       </div>
       <div id="tool_title"></div>
+      <div id="tool_slider" style="color: #666666">
+        <p slot="title" style="font-size: medium;margin-bottom: 10px;margin-top: 20px">
+<!--          <Icon type="ios-settings" size="23"/>-->
+          Dining Allocation
+        </p>
+        <RadioGroup v-model="radioControl" vertical on-change="">
+          <Radio label="default">
+            <Icon type="ios-help-buoy" />
+            <span>default</span>
+          </Radio>
+          <Radio label="oneQuarter">
+            <Icon type="md-person" />
+            <span>one-quarter</span>
+          </Radio>
+          <Radio label="twoQuarters">
+            <Icon type="md-people" size="19"/>
+            <span>two-quarters</span>
+          </Radio>
+        </RadioGroup>
+      </div>
     </div>
     <div id="main_chart">
     </div>
@@ -24,15 +44,15 @@
         data(){
             return {
                 value: 20,
+                radioControl: 'default',
                 marks: {
-
                 },
                 sites:[
                     {name:'第一食堂','name_':'C1',coordinate:[120.4478882,31.9557250105]},
                     {name:'第二食堂','name_':'C2',coordinate:[120.613338882,31.925250105]},
                     {name:'第四食堂','name_':'C4',coordinate:[120.651338882,31.817250105]},
-                    {name:'第三食堂','name_':'C3',coordinate:[120.793338882,31.877250105]},
-                    {name:'第五食堂','name_':'C5',coordinate:[120.723338882,31.977250105]},
+                    {name:'第三食堂','name_':'C3',coordinate:[120.793338882,31.882250105]},
+                    {name:'第五食堂','name_':'C5',coordinate:[120.723338882,31.967250105]},
                     // {name:'好利来食品店','name_':'S2',coordinate:[120.743338882,31.9487250105]},
                     // {name:'红太阳超市','name_':'S1',coordinate:[120.5738882,31.87087250105]},
                     // {name:'财务处','name_':'FO',coordinate:[120.5738882,31.93087250105]},
@@ -42,8 +62,14 @@
         mounted() {
 
             this.Init_Title();
-            this.$axios.all([DataManager.get_f1_geoJson_data(),DataManager.get_meal_data(),DataManager.get_meal_dept_data(),DataManager.get_meal_dept_pro()]).then(this.$axios.spread((res1,res2,res3,res4)=>{
-                this.Init(res1.data,res2.data,res3.data,res4.data)
+            this.$axios.all([DataManager.get_f1_geoJson_data(),
+                DataManager.get_meal_default(),DataManager.get_meal_quarter(),DataManager.get_meal_half(),
+                DataManager.get_meal_dept_default(),DataManager.get_meal_dept_quarter(),DataManager.get_meal_dept_half()
+            ]).then(this.$axios.spread((res1,
+                                        res2,res3,res4,
+                                        res5,res6,res7
+            )=>{
+                this.Init(res1.data,res2.data,res3.data,res4.data,res5.data,res6.data,res7.data)
             }))
 
         },
@@ -55,7 +81,7 @@
 
                 let option = {
                     title:{
-                        text:'THERE IS A TEXT',
+                        text:'DINING DISTRIBUTION',
                         textStyle:{
                             fontSize:16
                         }
@@ -67,9 +93,12 @@
                 title_div.style.transform = 'rotate(-90deg)';
 
             },
-            Init(geoJson,data_,dept_data,dept_data_pro) {
+            Init(geoJson,
+                 meal_default,meal_quarter,meal_half,
+                 dept_data_default,dept_data_quarter,dept_data_half
+            ) {
 
-                let data = d3.nest().key(d=>d.dept).entries(data_)
+
 
                 let color = [
                     "#d0648a",
@@ -126,19 +155,28 @@
                         return "translate("+coor[0]+", "+coor[1]+")";
                     });
 
-                let radial_area = ()=> {
+                let radial_area = {}
+                let radial_stacked = {}
 
-                    let radial_area = {}
+                let radial_area_ = ()=> {
+
+
+
+                    radial_area.data_default = d3.nest().key(d=>d.dept).entries(meal_default)
+                    radial_area.data_quarter = d3.nest().key(d=>d.dept).entries(meal_quarter)
+                    radial_area.data_half = d3.nest().key(d=>d.dept).entries(meal_half)
+
+
 
                     radial_area.innerRadius = 20
                     radial_area.outerRadius = 70
 
                     radial_area.x = d3.scaleUtc()
-                        .domain(d3.extent(data_, d => d3.timeParse('%H:%M:%S')(d.time)))
+                        .domain(d3.extent(meal_default, d => d3.timeParse('%H:%M:%S')(d.time)))
                         .range([0, 2 * Math.PI])
                     //
                     radial_area.y = d3.scaleLinear()
-                        .domain(d3.extent(data_, d => parseInt(d.max)))
+                        .domain(d3.extent(meal_default, d => parseInt(d.value)))
                         .range([radial_area.innerRadius, radial_area.outerRadius])
 
                     radial_area.xAxis = g => g
@@ -223,32 +261,39 @@
                     //         .outerRadius(d => radial_area.y(parseInt(d.value)))
                     //         (data[0].values)))
 
+                    console.log(radial_area.data_default.map(s => s.values));
 
+                    // sites.selectAll('.radial_area')
+                    //     .data(radial_area.data_default.map(s => s.values))
+                    //     .join("g")
+                    //     .attr('class','radial_area')
+                    //     .attr("fill", '#8fcc27')
+                    //     .selectAll("path")
+                    //     .data(d => d)
+                    //     .join("path")
+                    //     .attr("d", radial_area.area
+                    //         .innerRadius(20)
+                    //         .outerRadius(d => radial_area.y(parseInt(d.value))))
+
+                    // //
                     sites.append("path")
+                        .attr('class','radial_area')
                         .attr("fill", "#15c225")
                         .attr("fill-opacity", 0.2)
                         .attr("d", (d, i) => radial_area.area
                             .innerRadius(20)
-                            .outerRadius(d => radial_area.y(parseInt(d.avg)))
-                            (data.filter(s => s.key === d.name_)[0].values))
-
-                    // //
-                    // sites.append("path")
-                    //     .attr("fill", "steelblue")
-                    //     .attr("fill-opacity", 0.3)
-                    //     .attr("d", (d,i)=>radial_area.area
-                    //         .innerRadius(d => radial_area.y(parseInt(d.value)-60))
-                    //         .outerRadius(d => radial_area.y(parseInt(d.value)+60))
-                    //         (data[i].values))
+                            .outerRadius(d => radial_area.y(parseInt(d.value)))
+                            (radial_area.data_default.filter(s => s.key === d.name_)[0].values))
 
                     //
                     sites.append('g')
                         .append("path")
+                        .attr('class','radial_stroke')
                         .attr("fill", "none")
                         .attr("stroke", "#15c225")
                         .attr("stroke-width", .8)
-                        .attr("d", (d, i) => radial_area.line.radius(d => radial_area.y(parseInt(d.avg)))
-                        (data.filter(s => s.key === d.name_)[0].values))
+                        .attr("d", (d, i) => radial_area.line.radius(d => radial_area.y(parseInt(d.value)))
+                        (radial_area.data_default.filter(s => s.key === d.name_)[0].values))
 
                     sites.append('text')
                         .attr('text-anchor',"middle")
@@ -272,14 +317,51 @@
                         .call(radial_area.yAxis))
 
                 }
-                let radial_stacked =()=> {
+                let radial_stacked_ =()=> {
 
-                    let radial_stacked = {}
+                    let canteen_data_default = d3.nest().key(d=>d.canteen).entries(dept_data_default)
+                    let canteen_data_quarter = d3.nest().key(d=>d.canteen).entries(dept_data_quarter)
+                    let canteen_data_half = d3.nest().key(d=>d.canteen).entries(dept_data_half)
 
-                    let canteen_data = d3.nest().key(d=>d.canteen).entries(dept_data)
-                    let canteen_data_pro = d3.nest().key(d=>d.canteen).entries(dept_data_pro)
-
-                    radial_stacked.data = canteen_data.map(d=>{
+                    radial_stacked.data_default = canteen_data_default.map(d=>{
+                        return {
+                            'key':d.key,
+                            'values':d3.nest().key(d=>d.time).entries(d.values).map((d, i) => {
+                                return {
+                                    'State': 'S' + i,
+                                    'A1': parseInt(d.values[0].value),
+                                    'A2': parseInt(d.values[1].value),
+                                    'A3': parseInt(d.values[2].value),
+                                    'A4': parseInt(d.values[3].value),
+                                    'A5': parseInt(d.values[4].value),
+                                    'A6': parseInt(d.values[5].value),
+                                    'A7': parseInt(d.values[6].value),
+                                    'A8': parseInt(d.values[7].value),
+                                    total: d3.sum(d.values, d => parseInt(d.value))
+                                }
+                            })
+                        }
+                    })
+                    radial_stacked.data_quarter = canteen_data_quarter.map(d=>{
+                        return {
+                            'key':d.key,
+                            'values':d3.nest().key(d=>d.time).entries(d.values).map((d, i) => {
+                                return {
+                                    'State': 'S' + i,
+                                    'A1': parseInt(d.values[0].value),
+                                    'A2': parseInt(d.values[1].value),
+                                    'A3': parseInt(d.values[2].value),
+                                    'A4': parseInt(d.values[3].value),
+                                    'A5': parseInt(d.values[4].value),
+                                    'A6': parseInt(d.values[5].value),
+                                    'A7': parseInt(d.values[6].value),
+                                    'A8': parseInt(d.values[7].value),
+                                    total: d3.sum(d.values, d => parseInt(d.value))
+                                }
+                            })
+                        }
+                    })
+                    radial_stacked.data_half = canteen_data_half.map(d=>{
                         return {
                             'key':d.key,
                             'values':d3.nest().key(d=>d.time).entries(d.values).map((d, i) => {
@@ -299,35 +381,15 @@
                         }
                     })
 
-                    radial_stacked.data_pro = canteen_data_pro.map(d=>{
-                        return {
-                            'key':d.key,
-                            'values':d3.nest().key(d=>d.time).entries(d.values).map((d, i) => {
-                                return {
-                                    'State': 'S' + i,
-                                    'A1': parseInt(d.values[0].value),
-                                    'A2': parseInt(d.values[1].value),
-                                    'A3': parseInt(d.values[2].value),
-                                    'A4': parseInt(d.values[3].value),
-                                    'A5': parseInt(d.values[4].value),
-                                    'A6': parseInt(d.values[5].value),
-                                    'A7': parseInt(d.values[6].value),
-                                    'A8': parseInt(d.values[7].value),
-                                    total: d3.sum(d.values, d => parseInt(d.value))
-                                }
-                            })
-                        }
-                    })
-
-                    radial_stacked.innerRadius = 70
+                    radial_stacked.innerRadius = 60
                     radial_stacked.outerRadius = 150
 
                     radial_stacked.x = d3.scaleBand()
-                        .domain(radial_stacked.data[0].values.map(d => d.State))
+                        .domain(radial_stacked.data_default[0].values.map(d => d.State))
                         .range([0, 2 * Math.PI])
                         .align(0)
 
-                    let max = d3.max(radial_stacked.data,d=>d3.max(d.values,s=>s.total))
+                    let max = d3.max(radial_stacked.data_default,d=>d3.max(d.values,s=>s.total))
 
                     radial_stacked.y = Object.assign(d => Math.sqrt(d3.scaleLinear()
                         .domain([0, max])
@@ -356,17 +418,8 @@
                         .padAngle(0.01)
                         .padRadius(radial_stacked.innerRadius)
 
-                    // sites.call(g => g.selectAll(".radial_stacked")
-                    //     .data(d3.stack().keys(['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8'])(radial_stacked.data[0].values))
-                    //     .join("g")
-                    //     .attr("fill", d => radial_stacked.z(d.key))
-                    //     .selectAll("path")
-                    //     .data(d => d)
-                    //     .join("path")
-                    //     .attr("d", radial_stacked.arc))
-
                     sites.selectAll(".radial_stacked1")
-                        .data(d=>d3.stack().keys(['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8'])(radial_stacked.data.filter(s => s.key === d.name_)[0].values))
+                        .data(d=>d3.stack().keys(['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8'])(radial_stacked.data_default.filter(s => s.key === d.name_)[0].values))
                         .join('g')
                         .attr('class','radial_stacked1')
                         .attr("fill", d => radial_stacked.z(d.key))
@@ -374,8 +427,6 @@
                         .data(d => d)
                         .join("path")
                         .attr("d", radial_stacked.arc);
-
-
 
                     let legend = g => g.append("g")
                         .selectAll("g")
@@ -385,26 +436,7 @@
                         .call(g => g.append("rect")
                             .attr("width", 18)
                             .attr("height", 8)
-                            .attr("fill", radial_stacked.z)
-                            .on('click',d=>{
-                                sites.selectAll('.radial_stacked1')
-                                    .selectAll('path')
-                                    .attr("fill", '#ccc')
-                                    .attr("opacity", 0.7);
-
-                                sites.selectAll(".radial_stacked")
-                                    .data(d=>d3.stack().keys(['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8'])(radial_stacked.data_pro.filter(s => s.key === d.name_)[0].values))
-                                    .join('g')
-                                    .attr('class','radial_stacked')
-                                    .attr("fill", d => radial_stacked.z(d.key))
-                                    .selectAll("path")
-                                    .data(d => d)
-                                    .join("path")
-                                    // .attr('stroke','#787878')
-                                    // .attr('stroke-opacity',.1)
-                                    // .attr('stroke-width',.5)
-                                    .attr("d", radial_stacked.arc);
-                            }))
+                            .attr("fill", radial_stacked.z))
                         .call(g => g.append("text")
                             .attr("x", 24)
                             .attr("y", 5)
@@ -414,15 +446,137 @@
 
                     svg.append('g').call(legend)
 
+
                 }
 
+                radial_area_()
+                radial_stacked_()
+
+                d3.selectAll('label input')
+                    .data(['default','quarter','half'])
+                    .on('click',d=>{
+                        if(d === 'default'){
+
+                            sites.selectAll(".radial_stacked1").remove()
+
+                            sites.selectAll(".radial_stacked1")
+                                .data(d=>d3.stack().keys(['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8'])(radial_stacked.data_default.filter(s => s.key === d.name_)[0].values))
+                                .join('g')
+                                .attr('class','radial_stacked1')
+                                .attr("fill", d => radial_stacked.z(d.key))
+                                .selectAll("path")
+                                .data(d => d)
+                                .join("path")
+                                .attr("d", radial_stacked.arc);
+
+                            sites.selectAll(".radial_stacked").remove()
+
+                            sites.selectAll(".radial_area").remove()
+                            sites.selectAll(".radial_stroke").remove()
+
+                            sites.append("path")
+                                .attr('class','radial_area')
+                                .attr("fill", "#15c225")
+                                .attr("fill-opacity", 0.2)
+                                .attr("d", (d, i) => radial_area.area
+                                    .innerRadius(20)
+                                    .outerRadius(d => radial_area.y(parseInt(d.value)))
+                                    (radial_area.data_default.filter(s => s.key === d.name_)[0].values))
+
+                            sites.append('g')
+                                .append("path")
+                                .attr('class','radial_area')
+                                .attr("fill", "none")
+                                .attr("stroke", "#15c225")
+                                .attr("stroke-width", .8)
+                                .attr("d", (d, i) => radial_area.line.radius(d => radial_area.y(parseInt(d.value)))
+                                (radial_area.data_default.filter(s => s.key === d.name_)[0].values))
+
+                        }
+                        else if (d === 'quarter'){
+
+                            sites.selectAll('.radial_stacked1')
+                                .selectAll('path')
+                                .attr("fill", '#ccc')
+                                .attr("opacity", 0.7);
+
+                            sites.selectAll(".radial_stacked")
+                                .data(d=>d3.stack().keys(['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8'])(radial_stacked.data_quarter.filter(s => s.key === d.name_)[0].values))
+                                .join('g')
+                                .attr('class','radial_stacked')
+                                .attr("fill", d => radial_stacked.z(d.key))
+                                .selectAll("path")
+                                .data(d => d)
+                                .join("path")
+                                // .attr('stroke','#787878')
+                                // .attr('stroke-opacity',.1)
+                                // .attr('stroke-width',.5)
+                                .attr("d", radial_stacked.arc);
+
+                            sites.selectAll(".radial_area").remove()
+                            sites.selectAll(".radial_stroke").remove()
+
+                            sites.append("path")
+                                .attr('class','radial_area')
+                                .attr("fill", "#15c225")
+                                .attr("fill-opacity", 0.2)
+                                .attr("d", (d, i) => radial_area.area
+                                    .innerRadius(20)
+                                    .outerRadius(d => radial_area.y(parseInt(d.value)))
+                                    (radial_area.data_quarter.filter(s => s.key === d.name_)[0].values))
+
+                            sites.append('g')
+                                .append("path")
+                                .attr('class','radial_area')
+                                .attr("fill", "none")
+                                .attr("stroke", "#15c225")
+                                .attr("stroke-width", .8)
+                                .attr("d", (d, i) => radial_area.line.radius(d => radial_area.y(parseInt(d.value)))
+                                (radial_area.data_quarter.filter(s => s.key === d.name_)[0].values))
 
 
+                        }
+                        else{
+                            sites.selectAll('.radial_stacked1')
+                                .selectAll('path')
+                                .attr("fill", '#ccc')
+                                .attr("opacity", 0.7);
 
-                radial_area()
-                radial_stacked()
+                            sites.selectAll(".radial_stacked")
+                                .data(d=>d3.stack().keys(['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8'])(radial_stacked.data_half.filter(s => s.key === d.name_)[0].values))
+                                .join('g')
+                                .attr('class','radial_stacked')
+                                .attr("fill", d => radial_stacked.z(d.key))
+                                .selectAll("path")
+                                .data(d => d)
+                                .join("path")
+                                // .attr('stroke','#787878')
+                                // .attr('stroke-opacity',.1)
+                                // .attr('stroke-width',.5)
+                                .attr("d", radial_stacked.arc);
 
+                            sites.selectAll(".radial_area").remove()
+                            sites.selectAll(".radial_stroke").remove()
 
+                            sites.append("path")
+                                .attr('class','radial_area')
+                                .attr("fill", "#15c225")
+                                .attr("fill-opacity", 0.2)
+                                .attr("d", (d, i) => radial_area.area
+                                    .innerRadius(20)
+                                    .outerRadius(d => radial_area.y(parseInt(d.value)))
+                                    (radial_area.data_half.filter(s => s.key === d.name_)[0].values))
+
+                            sites.append('g')
+                                .append("path")
+                                .attr('class','radial_area')
+                                .attr("fill", "none")
+                                .attr("stroke", "#15c225")
+                                .attr("stroke-width", .8)
+                                .attr("d", (d, i) => radial_area.line.radius(d => radial_area.y(parseInt(d.value)))
+                                (radial_area.data_half.filter(s => s.key === d.name_)[0].values))
+                        }
+                    })
             }
         }
     }
@@ -471,7 +625,8 @@
     right: 0;
     bottom: 60px;
     width: 300px;
-    height: 170px;
+    height: 20%;
     z-index: 20;
+    /*background-color: #ccc;*/
   }
 </style>
