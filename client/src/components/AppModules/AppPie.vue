@@ -16,24 +16,6 @@
             Draw(pie_data,scatter_data){
                 let chart = this.$echarts.init(document.getElementById('pie_chart'));
 
-                let angleText = (i, num) =>{
-                    //每个元素的角度
-                    let everyAngle = 360 / num;
-                    //文字现在所在的角度
-                    let currentAngle = i * everyAngle + everyAngle / 2;
-                    //文字所在模块的所占角度
-                    let currentArea = (i + 1) * everyAngle;
-
-                    if (currentAngle <= 90) {
-                        return -currentAngle;
-                    } else if (currentAngle <= 180 && currentAngle > 90) {
-                        return 180 - currentAngle;
-                    } else if (currentAngle < 270 && currentAngle > 180) {
-                        return 180 - currentAngle;
-                    } else if (currentAngle < 360 && currentAngle >= 270) {
-                        return 360 - currentAngle;
-                    }
-                }
                 pie_data.forEach(d=>{
                     d.itemStyle = {
                         normal : {
@@ -53,17 +35,16 @@
                     "#f58db2",
                     "#f2b3c9",
                     "#f2c4bc",
-                    "#dcf296",
+                    "#f2c287",
                     "#b8f29c",
                     "#7bd9a5",
                     "#22c3aa",
                     "#4ea397"
                 ]
-                //console.log(source);
+
                 let option = {
                     title:{
-                        text:'POVERTY CLUSTER',
-                        subtext:'Notes: Poverty levels increase from P0 to P9',
+                        text:'CONSUMPTION CLUSTER',
                         textStyle:{
                             fontSize:16
                         }
@@ -75,7 +56,7 @@
                         "#f58db2",
                         "#f2b3c9",
                         "#f2c4bc",
-                        "#dcf296",
+                        "#f2c287",
                         "#b8f29c",
                         "#7bd9a5",
                         "#22c3aa",
@@ -84,20 +65,20 @@
                     legend:{
                         // show:false,
                         //默认横向布局，纵向布局值为'vertical' horizontal
-                        right:'10%',
-                        top:'5',
+                        left:'3',
+                        top:'7%',
                         // bottom:'0',
                         // y:'20%',
                         // orient:'vertical',
                         icon:'rect',
-                        itemWidth:10 ,
-                        itemHeight:6,
-                        itemGap:4,
+                        itemWidth:15 ,
+                        itemHeight:8,
+                        itemGap:13,
                         textStyle:{
                             fontSize:10,
                             color:'rgba(120,120,120,0.98)'
                         },
-                        data:pie_data.map(d=>d.name).sort((a,b)=>{a.localeCompare(b)})
+                        // data:pie_data.map(d=>d.name).sort((a,b)=>{a.localeCompare(b)})
                     },
                     xAxis: [{
                         gridIndex:0,
@@ -138,21 +119,19 @@
                         y:'35%',
                         containLabel: true
                     },{
-                        width:'20%',
+                        width:'30%',
                         height:'70%',
                         left:8,
                         y:'20%',
                         containLabel: true
-                    }]  ,
-                    series: [
-                        {
+                    }],
+                    series: [{
                             name:'',
                             type: 'pie',
                             y:'8%',
                             roseType: 'radius',
                             center: ['60%', '50%'],
                             radius: ['60%', '80%'],
-                            //avoidLabelOverlap: false,
                             hoverAnimation: false,
                             label: {
                                 normal: {
@@ -174,18 +153,15 @@
                                 }
                             },
                             data:pie_data
-                        },
-                        {
+                        }, {
                             name:'out_label',
                             type: 'pie',
                             y:'8%',
                             roseType: 'radius',
                             center: ['60%', '50%'],
-                            radius: ['65%', '91%'],
-                            //avoidLabelOverlap: false,
+                            radius: ['65%', '90%'],
                             hoverAnimation: false,
                             itemStyle: {
-                                // color: 'transparent'
                                 opacity:.2
                             },
                             label: {
@@ -203,7 +179,6 @@
                                 }
                             },
                             labelLine: {
-
                                 normal: {
                                     show: false
                                 },
@@ -212,8 +187,7 @@
                                 }
                             },
                             data:pie_data
-                        },
-                        {
+                        }, {
                             type: 'bar',
                             itemGap: '30',
                             barWidth: '5',
@@ -221,12 +195,10 @@
                             xAxisIndex: 1,
                             yAxisIndex: 1,
                             itemStyle: {
-                                //通常情况下：
                                 normal: {
-                                    //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组中的颜色
                                     color: function (params) {
                                         return color[params.dataIndex];
-                                    },
+                                    }
                                 }
                             },
                             label: {
@@ -234,8 +206,7 @@
                                     show: true,
                                     textStyle: {
                                         color: 'rgba(29,24,26,0.74)',
-                                        fontSize: 12,
-                                        //fontWeight: 'bold'
+                                        fontSize: 12
                                     },
                                     position: 'right'
                                 }
@@ -256,10 +227,11 @@
                         }
                     }))
                 };
+
                 chart.setOption(option);
+
                 chart.on('click',params=> {
                     if (params.componentSubType === 'pie') {
-                        // console.log(params.data.name)
                         this.$store.commit('current_cluster',params.data.name);
                     }
                 })

@@ -1,30 +1,44 @@
 <template>
-  <div id="test02">
-    <div id="rose_pie"></div>
-    <div id="calendar"></div>
+  <div id="timeline-container">
+    <div id="timeline-title"></div>
+    <div id="timeline">
+      <!--    <div id="rose_pie"></div>-->
+      <!--    <div id="calendar"></div>-->
+    </div>
   </div>
+
 </template>
 
 <script>
     import DataManager from "../../data/DataManager";
     import * as d3 from 'd3'
     export default {
-        name: "AppTest02",
+        name: "AppTimeLine",
+        data(){
+            return {
+                status:false
+            }
+        },
         mounted() {
-            this.Test()
+            DataManager.get_meal_timeline('C1').then(res=>{
+                this.TimeLine(res.data)
+            })
+            // this.Test()
+            this.Init_Title()
+            // this.TimeLine()
             // DataManager.get_meal_test().then(res=>{
             //     this.Init(res.data)
             // })
             // this.RosePie()
             // this.Calendar()
-            this.Circular_heat()
+            // this.Circular_heat()
             // DataManager.get_meal_dept_data().then(res=>{
             //     this.Stacked_Bar(res.data)
             // })
         },
         methods:{
-            Test(){
-                let chart = this.$echarts.init(document.getElementById('calendar'))
+            Test(status = 0){
+                let chart = this.$echarts.init(document.getElementById('test02'))
 
                 let color = d3.scaleOrdinal()
                     .domain(['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8'])
@@ -45,7 +59,7 @@
                         {name:'C5',itemStyle:{color:'#f77d8c',}},
                         {name:'A1',itemStyle:{color:color('A1')}},{name:'A2',itemStyle:{color:color('A2')}},{name:'A3',itemStyle:{color:color('A3')}},{name:'A4',itemStyle:{color:color('A4')}},
                         {name:'A5',itemStyle:{color:color('A5')}},{name:'A6',itemStyle:{color:color('A6')}},{name:'A7',itemStyle:{color:color('A7')}},{name:'A8',itemStyle:{color:color('A8')}}],
-                    links:[
+                    links:[[
                         {'source': 'A1', 'target':'C1', 'value': 145}, {'source':'A2', 'target':'C1', 'value': 127},
                         {'source': 'A3', 'target':'C1', 'value': 19},  {'source':'A4', 'target':'C1', 'value': 50},
                         {'source': 'A5', 'target':'C1', 'value': 147}, {'source':'A6', 'target':'C1', 'value': 102},
@@ -66,44 +80,42 @@
                         {'source': 'A3', 'target':'C5', 'value': 100}, {'source':'A4', 'target':'C5', 'value': 199},
                         {'source': 'A5', 'target':'C5', 'value': 46},  {'source':'A6', 'target':'C5', 'value': 11},
                         {'source': 'A7', 'target':'C5', 'value': 52},  {'source':'A8', 'target':'C5', 'value': 77}
-                    ]
+                    ],[{'source': 'A1', 'target': 'C4', 'value': 1276}, {'source': 'A2', 'target': 'C5', 'value': 2140}, {'source': 'A3', 'target': 'C4', 'value': 661}, {'source': 'A4', 'target': 'C3', 'value': 1216}, {'source': 'A5', 'target': 'C2', 'value': 1075}, {'source': 'A6', 'target': 'C2', 'value': 1163}, {'source': 'A7', 'target': 'C5', 'value': 245}, {'source': 'A8', 'target': 'C1', 'value': 1097}]]
                 }
 
                 let option = {
                     title: {
-                        text: 'THERE IS A TEXT',
+                        text: 'DINGING STATISTICS',
                         textStyle:{
                             fontSize:16
                         }
                     },
+                    legend:{},
                     tooltip: {
                         trigger: 'item',
                         triggerOn: 'mousemove'
                     },
-                    series: [
-                        {
-                            type: 'sankey',
-                            // orient: 'vertical',
-                            data: test.nodes,
-                            top:'15%',
-                            bottom:'5%',
-                            right:'5%',
-                            links: test.links,
-                            focusNodeAdjacency: true,
-                            lineStyle: {
-                                curveness: 0.5
-                            },
-                            levels: [{
-                                depth: 0,
-                                itemStyle: {
-                                    color: '#fbb4ae'
-                                },
-                                lineStyle: {
-                                    color: '#ccc',
-                                    opacity: .6
-                                }
-                            }]
+                    series: [{
+                        type: 'sankey',
+                        orient: 'vertical',
+                        label: {
+                            position: 'top'
+                        },
+                        data: test.nodes,
+                        top: '15%',
+                        bottom: '5%',
+                        right: '5%',
+                        links: test.links[status],
+                        focusNodeAdjacency: true,
+                        itemStyle: {
+                            borderWidth: 1,
+                            borderColor: '#aaa'
+                        },
+                        lineStyle: {
+                            color: 'source',
+                            curveness: 0.5
                         }
+                    }
                     ]
                 }
 
@@ -276,106 +288,106 @@
                     };
                 }
 
-       /*         let hours = ['12a', '1a', '2a', '3a', '4a', '5a', '6a', '7a', '8a', '9a', '10a', '11a', '12p', '1p', '2p', '3p', '4p', '5p', '6p', '7p', '8p', '9p', '10p', '11p'];
-                let days = ['Saturday', 'Friday', 'Thursday', 'Wednesday', 'Tuesday', 'Monday', 'Sunday'];
+                /*         let hours = ['12a', '1a', '2a', '3a', '4a', '5a', '6a', '7a', '8a', '9a', '10a', '11a', '12p', '1p', '2p', '3p', '4p', '5p', '6p', '7p', '8p', '9p', '10p', '11p'];
+                         let days = ['Saturday', 'Friday', 'Thursday', 'Wednesday', 'Tuesday', 'Monday', 'Sunday'];
 
-                let data = [[0,0,5],[0,1,1],[0,2,0],[0,3,0],[0,4,0],[0,5,0],[0,6,0],[0,7,0],[0,8,0],[0,9,0],[0,10,0],[0,11,2],[0,12,4],[0,13,1],[0,14,1],[0,15,3],[0,16,4],[0,17,6],[0,18,4],[0,19,4],[0,20,3],[0,21,3],[0,22,2],[0,23,5],[1,0,7],[1,1,0],[1,2,0],[1,3,0],[1,4,0],[1,5,0],[1,6,0],[1,7,0],[1,8,0],[1,9,0],[1,10,5],[1,11,2],[1,12,2],[1,13,6],[1,14,9],[1,15,11],[1,16,6],[1,17,7],[1,18,8],[1,19,12],[1,20,5],[1,21,5],[1,22,7],[1,23,2],[2,0,1],[2,1,1],[2,2,0],[2,3,0],[2,4,0],[2,5,0],[2,6,0],[2,7,0],[2,8,0],[2,9,0],[2,10,3],[2,11,2],[2,12,1],[2,13,9],[2,14,8],[2,15,10],[2,16,6],[2,17,5],[2,18,5],[2,19,5],[2,20,7],[2,21,4],[2,22,2],[2,23,4],[3,0,7],[3,1,3],[3,2,0],[3,3,0],[3,4,0],[3,5,0],[3,6,0],[3,7,0],[3,8,1],[3,9,0],[3,10,5],[3,11,4],[3,12,7],[3,13,14],[3,14,13],[3,15,12],[3,16,9],[3,17,5],[3,18,5],[3,19,10],[3,20,6],[3,21,4],[3,22,4],[3,23,1],[4,0,1],[4,1,3],[4,2,0],[4,3,0],[4,4,0],[4,5,1],[4,6,0],[4,7,0],[4,8,0],[4,9,2],[4,10,4],[4,11,4],[4,12,2],[4,13,4],[4,14,4],[4,15,14],[4,16,12],[4,17,1],[4,18,8],[4,19,5],[4,20,3],[4,21,7],[4,22,3],[4,23,0],[5,0,2],[5,1,1],[5,2,0],[5,3,3],[5,4,0],[5,5,0],[5,6,0],[5,7,0],[5,8,2],[5,9,0],[5,10,4],[5,11,1],[5,12,5],[5,13,10],[5,14,5],[5,15,7],[5,16,11],[5,17,6],[5,18,0],[5,19,5],[5,20,3],[5,21,4],[5,22,2],[5,23,0],[6,0,1],[6,1,0],[6,2,0],[6,3,0],[6,4,0],[6,5,0],[6,6,0],[6,7,0],[6,8,0],[6,9,0],[6,10,1],[6,11,0],[6,12,2],[6,13,1],[6,14,3],[6,15,4],[6,16,0],[6,17,0],[6,18,0],[6,19,0],[6,20,1],[6,21,2],[6,22,2],[6,23,6]];
-                let maxValue = echarts.util.reduce(data, function (max, item) {
-                    return Math.max(max, item[2]);
-                }, -Infinity);
+                         let data = [[0,0,5],[0,1,1],[0,2,0],[0,3,0],[0,4,0],[0,5,0],[0,6,0],[0,7,0],[0,8,0],[0,9,0],[0,10,0],[0,11,2],[0,12,4],[0,13,1],[0,14,1],[0,15,3],[0,16,4],[0,17,6],[0,18,4],[0,19,4],[0,20,3],[0,21,3],[0,22,2],[0,23,5],[1,0,7],[1,1,0],[1,2,0],[1,3,0],[1,4,0],[1,5,0],[1,6,0],[1,7,0],[1,8,0],[1,9,0],[1,10,5],[1,11,2],[1,12,2],[1,13,6],[1,14,9],[1,15,11],[1,16,6],[1,17,7],[1,18,8],[1,19,12],[1,20,5],[1,21,5],[1,22,7],[1,23,2],[2,0,1],[2,1,1],[2,2,0],[2,3,0],[2,4,0],[2,5,0],[2,6,0],[2,7,0],[2,8,0],[2,9,0],[2,10,3],[2,11,2],[2,12,1],[2,13,9],[2,14,8],[2,15,10],[2,16,6],[2,17,5],[2,18,5],[2,19,5],[2,20,7],[2,21,4],[2,22,2],[2,23,4],[3,0,7],[3,1,3],[3,2,0],[3,3,0],[3,4,0],[3,5,0],[3,6,0],[3,7,0],[3,8,1],[3,9,0],[3,10,5],[3,11,4],[3,12,7],[3,13,14],[3,14,13],[3,15,12],[3,16,9],[3,17,5],[3,18,5],[3,19,10],[3,20,6],[3,21,4],[3,22,4],[3,23,1],[4,0,1],[4,1,3],[4,2,0],[4,3,0],[4,4,0],[4,5,1],[4,6,0],[4,7,0],[4,8,0],[4,9,2],[4,10,4],[4,11,4],[4,12,2],[4,13,4],[4,14,4],[4,15,14],[4,16,12],[4,17,1],[4,18,8],[4,19,5],[4,20,3],[4,21,7],[4,22,3],[4,23,0],[5,0,2],[5,1,1],[5,2,0],[5,3,3],[5,4,0],[5,5,0],[5,6,0],[5,7,0],[5,8,2],[5,9,0],[5,10,4],[5,11,1],[5,12,5],[5,13,10],[5,14,5],[5,15,7],[5,16,11],[5,17,6],[5,18,0],[5,19,5],[5,20,3],[5,21,4],[5,22,2],[5,23,0],[6,0,1],[6,1,0],[6,2,0],[6,3,0],[6,4,0],[6,5,0],[6,6,0],[6,7,0],[6,8,0],[6,9,0],[6,10,1],[6,11,0],[6,12,2],[6,13,1],[6,14,3],[6,15,4],[6,16,0],[6,17,0],[6,18,0],[6,19,0],[6,20,1],[6,21,2],[6,22,2],[6,23,6]];
+                         let maxValue = echarts.util.reduce(data, function (max, item) {
+                             return Math.max(max, item[2]);
+                         }, -Infinity);
 
-                let option = {
-                    title:{
-                        text:'Canteen Polar',
-                        subtext:'name: C1',
-                        textStyle:{
-                            fontSize:16
-                        }
-                    },
-                    color:[
-                        "#d0648a",
-                        "#d07999",
-                        "#f58db2",
-                        "#f2b3c9",
-                        "#f2c4bc",
-                        "#dcf296",
-                        "#b8f29c",
-                        "#7bd9a5",
-                        "#22c3aa",
-                        "#4ea397"
-                    ],
-                    legend: {
-                        show:false,
-                        data: ['Punch Card']
-                    },
-                    polar: {
-                        radius: ['0','65%'],//半径大小
-                        center:['50%','55%']
-                    },
-                    tooltip: {
-                    },
-                    visualMap: {
-                        // show:false,
-                        inRange: {
-                            color: ['#fff', '#15c225']
-                        },
-                        type: 'continuous',
-                        min: 0,
-                        orient:'horizontal',
-                        max: maxValue,
-                        top: '0',
-                        text:['High', 'Low'],
-                        borderColor:"#a8a8a8",
-                        itemWidth:10,                          //图形的宽度，即长条的宽度。
-                        itemHeight:55,                        //图形的高度，即长条的高度。
-                        right:0,
-                        dimension: 2,
-                        calculable: false
-                    },
-                    angleAxis: {
-                        type: 'category',
-                        data: hours.map((d,i)=>i),
-                        boundaryGap: false,
-                        axisTick:{
-                            lineStyle: {
-                                'color':'#ccc'
-                            }
-                        },
-                        splitLine: {
-                            show: true,
-                            lineStyle: {
-                                color: '#ddd',
-                                type: 'dashed'
-                            }
-                        },
-                        axisLine: {
-                            show: false
-                        },
-                        axisLabel: {
-                            show: true,
-                            textStyle: {
-                                fontSize:10,
-                                color: '#676767'
-                            }
-                        }
-                    },
-                    radiusAxis: {
-                        show:false,
-                        type: 'category',
-                        data: days,
-                        z: 100
-                    },
-                    series: [{
-                        name: 'Punch Card',
-                        type: 'custom',
-                        coordinateSystem: 'polar',
-                        itemStyle: {
-                            color: '#15c225'
-                        },
-                        renderItem: renderItem,
-                        data: data
-                    }]
-                };*/
+                         let option = {
+                             title:{
+                                 text:'Canteen Polar',
+                                 subtext:'name: C1',
+                                 textStyle:{
+                                     fontSize:16
+                                 }
+                             },
+                             color:[
+                                 "#d0648a",
+                                 "#d07999",
+                                 "#f58db2",
+                                 "#f2b3c9",
+                                 "#f2c4bc",
+                                 "#dcf296",
+                                 "#b8f29c",
+                                 "#7bd9a5",
+                                 "#22c3aa",
+                                 "#4ea397"
+                             ],
+                             legend: {
+                                 show:false,
+                                 data: ['Punch Card']
+                             },
+                             polar: {
+                                 radius: ['0','65%'],//半径大小
+                                 center:['50%','55%']
+                             },
+                             tooltip: {
+                             },
+                             visualMap: {
+                                 // show:false,
+                                 inRange: {
+                                     color: ['#fff', '#15c225']
+                                 },
+                                 type: 'continuous',
+                                 min: 0,
+                                 orient:'horizontal',
+                                 max: maxValue,
+                                 top: '0',
+                                 text:['High', 'Low'],
+                                 borderColor:"#a8a8a8",
+                                 itemWidth:10,                          //图形的宽度，即长条的宽度。
+                                 itemHeight:55,                        //图形的高度，即长条的高度。
+                                 right:0,
+                                 dimension: 2,
+                                 calculable: false
+                             },
+                             angleAxis: {
+                                 type: 'category',
+                                 data: hours.map((d,i)=>i),
+                                 boundaryGap: false,
+                                 axisTick:{
+                                     lineStyle: {
+                                         'color':'#ccc'
+                                     }
+                                 },
+                                 splitLine: {
+                                     show: true,
+                                     lineStyle: {
+                                         color: '#ddd',
+                                         type: 'dashed'
+                                     }
+                                 },
+                                 axisLine: {
+                                     show: false
+                                 },
+                                 axisLabel: {
+                                     show: true,
+                                     textStyle: {
+                                         fontSize:10,
+                                         color: '#676767'
+                                     }
+                                 }
+                             },
+                             radiusAxis: {
+                                 show:false,
+                                 type: 'category',
+                                 data: days,
+                                 z: 100
+                             },
+                             series: [{
+                                 name: 'Punch Card',
+                                 type: 'custom',
+                                 coordinateSystem: 'polar',
+                                 itemStyle: {
+                                     color: '#15c225'
+                                 },
+                                 renderItem: renderItem,
+                                 data: data
+                             }]
+                         };*/
 
                 var hours = ['A1','A2','A3','A4','A5','A6','A7','A8'];
                 var days = ['C1','C2','C3','C4','C5'];
@@ -683,176 +695,297 @@
                     }))
 
             },
-            TimeLine(){
-                let margin = {top: 30, right: 30, bottom: 30, left: 40};
+            Init_Title() {
+                let title_div = document.getElementById("timeline-title");
 
-                let width = document.getElementById('calendar').offsetWidth;
-                let height = document.getElementById('calendar').offsetHeight;
+                let chart = this.$echarts.init(title_div);
 
-                width = width - margin.left - margin.right;
-                height = height - margin.top - margin.bottom;
+                let option = {
+                    title: {
+                        text: "DINING DISTRIBUTION",
+                        textStyle: {
+                            fontSize: 16
+                        }
+                    }
+                };
 
-                let svg = d3.select('#calendar')
-                    .append("svg")
-                    .attr("width", width + margin.left + margin.right)
-                    .attr("height", height + margin.top + margin.bottom);
+                chart.setOption(option);
 
-                let categories = ['C1','C2','C3','C4','C5']
-
-
+                title_div.style.transform = "rotate(-90deg)";
             },
-            Stacked_Bar(data){
-                let width = document.getElementById('calendar').offsetWidth;
-                let height = document.getElementById('calendar').offsetHeight;
+            TimeLine(dataset){
 
-                let margin = {top: 10, right: 10, bottom: 20, left: 40}
+                let chart = this.$echarts.init(document.getElementById('timeline'))
 
-                let svg = d3.select('#calendar').append("svg")
-                    .attr('width',width)
-                    .attr('height',height)
-                    // .attr("viewBox", [-width / 2, -height / 2, width, height])
-                    .attr("stroke-linejoin", "round")
-                    .attr("stroke-linecap", "round");
+                chart.clear()
 
-                data  = d3.nest().key(d=>d.time).entries(data).map((d,i)=>{
-                    return {
-                        name: i,
-                        'A1': parseInt(d.values[0].value),
-                        'A2': parseInt(d.values[1].value),
-                        'A3': parseInt(d.values[2].value),
-                        'A4': parseInt(d.values[3].value),
-                        'A5': parseInt(d.values[4].value),
-                        'A6': parseInt(d.values[5].value),
-                        'A7': parseInt(d.values[6].value),
-                        'A8': parseInt(d.values[7].value),
-                        total: d3.sum(d.values, d => parseInt(d.value))
-                    }
-                }).slice(10,47)
+                let echarts = this.$echarts
+                let nests = d3.nest().key(d=>d.department).entries(dataset)
 
-                let test_data = [...Array(48)].map((d,i)=>{
-                    return {
-                        name:i,
-                        A1:Math.random()*100,
-                        A2:Math.random()*100,
-                        A3:Math.random()*100,
-                        A4:Math.random()*100,
-                        A5:Math.random()*100,
-                        A6:Math.random()*100,
-                        A7:Math.random()*100,
-                        A8:Math.random()*100,
-                    }
-                }).map(d=>{
-                    return {
-                        name:d.name,
-                        A1:d.A1,
-                        A2:d.A2,
-                        A3:d.A3,
-                        A4:d.A4,
-                        A5:d.A5,
-                        A6:d.A6,
-                        A7:d.A7,
-                        A8:d.A8,
-                        total:d3.sum([d.A1,d.A2,d.A3,d.A4,d.A5,d.A6,d.A7,d.A8],d=>d)
-                    }
-                }).slice(10,47)
+                let test_data = []
 
-                let series = d3.stack()
-                    .keys(['A1','A2','A3','A4','A5','A6','A7','A8'])
-                    (data)
-                    .map(d => (d.forEach(v => v.key = d.key), d))
+                let max = 0
 
-                let series1 = d3.stack()
-                    .keys(['A1','A2','A3','A4','A5','A6','A7','A8'])
-                    (test_data)
-                    .map(d => (d.forEach(v => v.key = d.key), d))
+                nests.forEach((d,i)=>{
+                    d.values.forEach((s,j)=>{
+                        if(parseInt(s.value)>max)
+                            max = parseInt(s.value)
+                        test_data.push([i,j,parseInt(s.value)]);
+                    })
+                })
 
-                let x = d3.scaleBand()
-                    .domain(data.map(d => d.name))
-                    .range([margin.left, width - margin.right])
-                    .padding(0.1)
 
-                let y = d3.scaleLinear()
-                    .domain([0, d3.max(series, d => d3.max(d, d => d[1]))])
-                    .rangeRound([height/2 - margin.bottom, margin.top])
+                let scale = d3.scaleLinear()
+                    .domain([0,max])
+                    .range([0,50])
 
-                let y1 = d3.scaleLinear()
-                    .domain([0, d3.max(series, d => d3.max(d, d => d[1]))])
-                    .rangeRound([ margin.top,height/2 - margin.bottom])
+                var hours = [...Array(72)].map((d,i)=>i);
+                var days = ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7','A8'];
 
-                let xAxis = g => g
-                    .attr("transform", `translate(0,${height/2- margin.bottom})`)
-                    .call(d3.axisBottom(x).tickSizeOuter(0))
-                    .call(g => g.selectAll(".tick").remove())
-                    .call(g => g.selectAll("path").attr('stroke-opacity',.4))
-
-                let color = d3.scaleOrdinal()
-                    .domain(series.map(d => d.key))
-                    .range([
+                let option = {
+                    color:[
                         "#d0648a",
                         "#d07999",
                         "#f58db2",
-                        "#f2b3c9",
-                        "#f2c4bc",
                         "#dcf296",
                         "#b8f29c",
                         "#7bd9a5",
                         "#22c3aa",
                         "#4ea397"
-                    ])
-                    .unknown("#ccc")
+                    ],
+                    tooltip: {
+                        show:false,
+                        trigger:'axis',
+                        position: 'top'
+                    },
+                    title: [],
+                    singleAxis: [],
+                    series: []
+                };
 
-                let stacked_bar_g = svg.selectAll('g')
-                    .data(['C1'])
-                    .enter()
-                    .append('g')
-                    // .attr('transform',(d,i)=>{
-                    //     return `translate(0,${i*height+ 10})`
-                    // })
+                echarts.util.each(days, function (day, idx) {
+                    option.title.push({
+                        textBaseline: 'middle',
+                        left:50,
+                        top: (idx +0.3) * 100 / 8.5 + '%',
+                        subtext: day
+                    });
+                    option.singleAxis.push({
+                        left: 100,
+                        type: 'category',
+                        boundaryGap: false,
+                        data: hours,
+                        top: (idx * 100 / 8.5 +7) + '%',
+                        height: (100 / 8.5 - 10) + '%',
+                        axisLine: {
+                            lineStyle: {
+                                width: .4,
+                                color: '#999'
+                            }
+                        },
+                        axisTick: {
+                            lineStyle: {
+                                color: '#ccc'
+                            }
+                        },
+                        axisLabel: {
+                            show:false,
+                            interval: 2
+                        }
+                    });
+                    option.series.push({
+                        singleAxisIndex: idx,
+                        coordinateSystem: 'singleAxis',
+                        type: 'scatter',
+                        data: [],
+                        symbolSize: function (dataItem) {
+                            return scale(dataItem[1]);
+                        }
+                    });
+                });
 
+                echarts.util.each(test_data, function (dataItem) {
+                    option.series[dataItem[0]].data.push([dataItem[1], dataItem[2]]);
+                });
 
-                stacked_bar_g.call(g=>g.append("g")
-                    .selectAll("g")
-                    .data(series1)
-                    .join("g")
-                    .attr("fill", d => color(d.key))
-                    .attr("opacity", .3)
-                    .selectAll("rect")
-                    .data(d => d)
-                    .join("rect")
-                    .attr("x", (d, i) => x(d.data.name))
-                    .attr("y", d => y1(d[1]))
-                    .attr("height", d => y1(d[0]) - y1(d[1]))
-                    .attr("width", x.bandwidth()))
+                chart.setOption(option)
 
-                stacked_bar_g.call(g=>g.append("g")
-                    .selectAll("g")
-                    .data(series)
-                    .join("g")
-                    .attr("fill", d => color(d.key))
-                    .attr("opacity", .8)
-                    .selectAll("rect")
-                    .data(d => d)
-                    .join("rect")
-                    .attr("x", (d, i) => x(d.data.name))
-                    .attr("y", d => y(d[1]))
-                    .attr("height", d => y(d[0]) - y(d[1]))
-                    .attr("width", x.bandwidth()))
+                /*                let option = {
 
+                                    color:            [
+                                        "#d0648a",
+                                        "#d07999",
+                                        "#f58db2",
+                                        "#dcf296",
+                                        "#b8f29c",
+                                        "#7bd9a5"
+                                    ],
+                                    tooltip: {
+                                        trigger: 'axis',
+                                        axisPointer: {
+                                            type: 'line',
+                                            lineStyle: {
+                                                color: 'rgba(0,0,0,0.2)',
+                                                width: 1,
+                                                type: 'solid'
+                                            }
+                                        }
+                                    },
 
-                stacked_bar_g.call(g=>g.append('g').call(xAxis))
+                                    legend: {
+                                        left:0,
+                                        y:'center',
+                                        icon:'rect',
+                                        itemWidth:10 ,
+                                        itemHeight:6,
+                                        itemGap:4,
+                                        textStyle:{
+                                            fontSize:10,
+                                            color:'rgba(120,120,120,0.98)'
+                                        },
+                                        data: ['DQ', 'TY', 'SS', 'QG', 'SY', 'DD'],
+                                        orient:'vertical'
+                                    },
 
+                                    singleAxis: {
+                                        top: 20,
+                                        bottom: 0,
+                                        axisTick: {
+                                            label: {
+                                                show: false
+                                            }
+                                        },
+                                        axisLabel: {
+                                            show:false
+                                        },
+                                        type: 'time',
+                                        axisPointer: {
+                                            animation: true,
+                                            label: {
+                                                show: false
+                                            }
+                                        },
+                                        splitLine: {
+                                            show: true,
+                                            lineStyle: {
+                                                type: 'dashed',
+                                                opacity: 0.2
+                                            },
+                                            label: {
+                                                show: false
+                                            }
+                                        }
+                                    },
+
+                                    series: [
+                                        {
+                                            type: 'themeRiver',
+                                            label: {
+                                                show: false
+                                            },
+                                            emphasis: {
+                                                itemStyle: {
+                                                    shadowBlur: 20,
+                                                    shadowColor: 'rgba(0, 0, 0, 0.8)'
+                                                }
+                                            },
+                                            data: [['2015/11/08',10,'DQ'],['2015/11/09',15,'DQ'],['2015/11/10',35,'DQ'],
+                                                ['2015/11/11',38,'DQ'],['2015/11/12',22,'DQ'],['2015/11/13',16,'DQ'],
+                                                ['2015/11/14',7,'DQ'],['2015/11/15',2,'DQ'],['2015/11/16',17,'DQ'],
+                                                ['2015/11/17',33,'DQ'],['2015/11/18',40,'DQ'],['2015/11/19',32,'DQ'],
+                                                ['2015/11/20',26,'DQ'],['2015/11/21',35,'DQ'],['2015/11/22',40,'DQ'],
+                                                ['2015/11/23',32,'DQ'],['2015/11/24',26,'DQ'],['2015/11/25',22,'DQ'],
+                                                ['2015/11/26',16,'DQ'],['2015/11/27',22,'DQ'],['2015/11/28',10,'DQ'],
+                                                ['2015/11/08',35,'TY'],['2015/11/09',36,'TY'],['2015/11/10',37,'TY'],
+                                                ['2015/11/11',22,'TY'],['2015/11/12',24,'TY'],['2015/11/13',26,'TY'],
+                                                ['2015/11/14',34,'TY'],['2015/11/15',21,'TY'],['2015/11/16',18,'TY'],
+                                                ['2015/11/17',45,'TY'],['2015/11/18',32,'TY'],['2015/11/19',35,'TY'],
+                                                ['2015/11/20',30,'TY'],['2015/11/21',28,'TY'],['2015/11/22',27,'TY'],
+                                                ['2015/11/23',26,'TY'],['2015/11/24',15,'TY'],['2015/11/25',30,'TY'],
+                                                ['2015/11/26',35,'TY'],['2015/11/27',42,'TY'],['2015/11/28',42,'TY'],
+                                                ['2015/11/08',21,'SS'],['2015/11/09',25,'SS'],['2015/11/10',27,'SS'],
+                                                ['2015/11/11',23,'SS'],['2015/11/12',24,'SS'],['2015/11/13',21,'SS'],
+                                                ['2015/11/14',35,'SS'],['2015/11/15',39,'SS'],['2015/11/16',40,'SS'],
+                                                ['2015/11/17',36,'SS'],['2015/11/18',33,'SS'],['2015/11/19',43,'SS'],
+                                                ['2015/11/20',40,'SS'],['2015/11/21',34,'SS'],['2015/11/22',28,'SS'],
+                                                ['2015/11/23',26,'SS'],['2015/11/24',37,'SS'],['2015/11/25',41,'SS'],
+                                                ['2015/11/26',46,'SS'],['2015/11/27',47,'SS'],['2015/11/28',41,'SS'],
+                                                ['2015/11/08',10,'QG'],['2015/11/09',15,'QG'],['2015/11/10',35,'QG'],
+                                                ['2015/11/11',38,'QG'],['2015/11/12',22,'QG'],['2015/11/13',16,'QG'],
+                                                ['2015/11/14',7,'QG'],['2015/11/15',2,'QG'],['2015/11/16',17,'QG'],
+                                                ['2015/11/17',33,'QG'],['2015/11/18',40,'QG'],['2015/11/19',32,'QG'],
+                                                ['2015/11/20',26,'QG'],['2015/11/21',35,'QG'],['2015/11/22',40,'QG'],
+                                                ['2015/11/23',32,'QG'],['2015/11/24',26,'QG'],['2015/11/25',22,'QG'],
+                                                ['2015/11/26',16,'QG'],['2015/11/27',22,'QG'],['2015/11/28',10,'QG'],
+                                                ['2015/11/08',10,'SY'],['2015/11/09',15,'SY'],['2015/11/10',35,'SY'],
+                                                ['2015/11/11',38,'SY'],['2015/11/12',22,'SY'],['2015/11/13',16,'SY'],
+                                                ['2015/11/14',7,'SY'],['2015/11/15',2,'SY'],['2015/11/16',17,'SY'],
+                                                ['2015/11/17',33,'SY'],['2015/11/18',40,'SY'],['2015/11/19',32,'SY'],
+                                                ['2015/11/20',26,'SY'],['2015/11/21',35,'SY'],['2015/11/22',4,'SY'],
+                                                ['2015/11/23',32,'SY'],['2015/11/24',26,'SY'],['2015/11/25',22,'SY'],
+                                                ['2015/11/26',16,'SY'],['2015/11/27',22,'SY'],['2015/11/28',10,'SY'],
+                                                ['2015/11/08',10,'DD'],['2015/11/09',15,'DD'],['2015/11/10',35,'DD'],
+                                                ['2015/11/11',38,'DD'],['2015/11/12',22,'DD'],['2015/11/13',16,'DD'],
+                                                ['2015/11/14',7,'DD'],['2015/11/15',2,'DD'],['2015/11/16',17,'DD'],
+                                                ['2015/11/17',33,'DD'],['2015/11/18',4,'DD'],['2015/11/19',32,'DD'],
+                                                ['2015/11/20',26,'DD'],['2015/11/21',35,'DD'],['2015/11/22',40,'DD'],
+                                                ['2015/11/23',32,'DD'],['2015/11/24',26,'DD'],['2015/11/25',22,'DD'],
+                                                ['2015/11/26',16,'DD'],['2015/11/27',22,'DD'],['2015/11/28',10,'DD']]
+                                        }
+                                    ]
+                                };
+
+                                chart.setOption(option)*/
+            }
+        },
+        computed: {
+            current_canteen() {
+                return this.$store.state.current_canteen;
+            },
+            arrangeDinging() {
+                return this.$store.state.arrangeDinging;
+            }
+        },
+        watch:{
+            current_canteen:{
+                handler(canteen){
+                    if(!this.status)
+                        DataManager.get_meal_timeline(canteen).then(res=>{
+                            // d3.select('#timeline').html('')
+                            this.TimeLine(res.data)
+                        })
+                    else
+                        DataManager.get_meal_timeline_pro(canteen).then(res=>{
+                            // d3.select('#timeline').html('')
+                            this.TimeLine(res.data)
+                        })
+                }
+            },
+            arrangeDinging:{
+                handler(status){
+                    this.status = status
+                }
             }
         }
     }
 </script>
 
 <style scoped>
-  #test02{
+
+  #timeline-container{
     position: absolute;
     left: 27%;
     bottom: 0;
     width: 46%;
     height: 30%;
+    /*background-color: #ffd82f;*/
+  }
+  #timeline{
+    position: absolute;
+    left: 1%;
+    bottom: 0;
+    width: 99%;
+    height: 100%;
     /*background-color: #ffd82f;*/
   }
 
@@ -862,7 +995,14 @@
     height: 100%;
     /*background-color: indianred;*/
   }
-
+  #timeline-title{
+    position: absolute;
+    left: 0;
+    bottom: 10px;
+    width: 200px;
+    height: 200px;
+    z-index: 20;
+  }
   #calendar{
     position: absolute;
     top:0;

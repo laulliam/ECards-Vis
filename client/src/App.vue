@@ -56,17 +56,33 @@
     background-color: #f77d8c;
   }
 
+  .ivu-btn {
+    padding: 0 5px;
+  }
+  .ivu-card.ivu-card-dis-hover.ivu-card-bordered:hover {
+     border-color: #ffffff;
+  }
   .ivu-slider-bar {
     height: 4px;
     background: #f77d8c;
     border-radius: 3px;
     position: absolute;
   }
+
+  .ivu-card-bordered {
+     border: 1px solid #ffffff;
+     border-color: #ffffff;
+  }
+
+  .ivu-switch-checked {
+    border-color: #f77d8c;
+    background-color: #f77d8c;
+  }
   .ivu-slider-wrap {
     /*align-items: center;*/
-    width: 70%;
-    left: 15%;
-    bottom:10%;
+    width: 80%;
+    left: 10%;
+    bottom:6%;
   }
 
   .ivu-slider-button {

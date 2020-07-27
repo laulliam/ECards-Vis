@@ -8,21 +8,9 @@ var sql_operation = require("./operation");
 
 router.get("/f1_cluster_data", function(req, res, next) {
   sql_operation.query(`select cluster from cluster_data`,data=>{
-    let povertyIndex = {
-      6:'P9',
-      7:'P8',
-      4:'P7',
-      8:'P6',
-      1:'P5',
-      9:'P4',
-      0:'P3',
-      5:'P2',
-      3:'P1',
-      2:'P0'
-    };
     data = d3.nest().key(d=>d.cluster).entries(data).map(d=>{
       return {
-        'name':povertyIndex[parseInt(d.key)],
+        'name':'P'+d.key,
         'value': d.values.length
       }
     }).sort((a,b)=>a.name.localeCompare(b.name));
@@ -32,21 +20,9 @@ router.get("/f1_cluster_data", function(req, res, next) {
 
 router.get("/f1_scatter_data", function(req, res, next) {
   sql_operation.query(`select card_id,x,y,cluster from cluster_data`,data=>{
-    let povertyIndex = {
-      1:'P9',
-      2:'P8',
-      7:'P7',
-      4:'P6',
-      0:'P5',
-      3:'P4',
-      9:'P3',
-      5:'P2',
-      6:'P1',
-      8:'P0'
-    };
     data = d3.nest().key(d=>d.cluster).entries(data).map(d=>{
       return {
-        name:povertyIndex[parseInt(d.key)],
+        name:'P'+d.key,
         data:d.values.map(d=>[d.x,d.y,d.card_id])
       }
     }).sort((a,b)=>a.name.localeCompare(b.name));
@@ -72,22 +48,10 @@ router.get("/f1_main_data", function(req, res, next) {
 });
 
 router.get("/f1_timeline_data", function(req, res, next) {
-  let povertyIndex = {
-    1:'P9',
-    2:'P8',
-    7:'P7',
-    4:'P6',
-    0:'P5',
-    3:'P4',
-    9:'P3',
-    5:'P2',
-    6:'P1',
-    8:'P0'
-  };
   sql_operation.query(`select * from cluster_day_cost`,data=>{
     data.map(d=>{
       return {
-        label:povertyIndex[parseInt(d.label)],
+        label:d.label,
         date:d.date,
         value:d.value
       }
@@ -98,18 +62,6 @@ router.get("/f1_timeline_data", function(req, res, next) {
 
 router.get("/f1_parallel_data", function(req, res, next) {
   sql_operation.query(`select card_id,total,cafeteria,store,charge,count,surplus_max,count,cluster from cluster_data`,data=>{
-    let povertyIndex = {
-      1:'P9',
-      2:'P8',
-      7:'P7',
-      4:'P6',
-      0:'P5',
-      3:'P4',
-      9:'P3',
-      5:'P2',
-      6:'P1',
-      8:'P0'
-    };
     data = d3.nest().key(d=>d.cluster).entries(data).map(d=>{
       return {
         // name:povertyIndex[parseInt(d.key)],
@@ -125,7 +77,7 @@ router.get("/f1_mealRate_data", function(req, res, next) {
   sql_operation.query(`select * from dine`,data=>{
     data = d3.nest().key(d=>d.label).entries(data).map(d=>{
       return {
-        label:d.key,
+        cluster:'cluster'+parseInt(d.key),
         data:[
           (d3.sum(d.values,s=>s.morn_)/d.values.length).toFixed(2),
           (d3.sum(d.values,s=>s.noon_)/d.values.length).toFixed(2),
@@ -133,7 +85,7 @@ router.get("/f1_mealRate_data", function(req, res, next) {
         ]
       }
     })
-    res.send(data);
+    res.send(data.filter(d=>d.cluster === req.query.cluster)[0].data);
   });
 });
 
@@ -161,12 +113,30 @@ router.get("/f1_graph_data", function(req, res, next) {
     {name:'cluster8',data:graph_cluster8},
     {name:'cluster9',data:graph_cluster9}
   ]
-  res.send(graph_data);
+
+  let data = graph_data.filter(d=>d.name === req.query.name)[0].data
+  data.nodes = data.nodes.filter(d=>d.name[0] === 'C')
+  data.links = data.links.filter(d=>d.source[0] === 'C' && d.target[0]==='C')
+  res.send(graph_data.filter(d=>d.name === req.query.name)[0].data);
 });
 
 router.get("/f1_geoJson_data", function(req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   let file = path.join(__dirname, "../public/map.json"); //文件路径，__dirname为当前运行js文件的目录
+  //var file = 'f:\\nodejs\\data\\test.json'; //也可以用这种方式指定路径
+  //读取json文件
+  fs.readFile(file, "utf-8", function(err, data) {
+    if (err) {
+      res.send("文件读取失败");
+    } else {
+      res.send(data);
+    }
+  });
+});
+
+router.get("/freq_words_data", function(req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  let file = path.join(__dirname, "../public/freq_words.json"); //文件路径，__dirname为当前运行js文件的目录
   //var file = 'f:\\nodejs\\data\\test.json'; //也可以用这种方式指定路径
   //读取json文件
   fs.readFile(file, "utf-8", function(err, data) {
@@ -230,21 +200,23 @@ router.get("/dept_20min_quarter", function(req, res, next) {
 });
 
 
-router.get("/f4_network_data", function(req, res, next) {
-  sql_operation.query(`select * from network_13`,data=>{
+router.get("/network_data", function(req, res, next) {
+  sql_operation.query(`select * from network_pro`,data=>{
 
+    // data = data.filter(d=>parseInt(d.value) >= req.query.min && parseInt(d.value) <= req.query.max)
+    data = data.filter(d=>parseInt(d.sg_number) >= req.query.cs_min && parseInt(d.sg_number) <= req.query.cs_max)
+    data = data.filter(d=>parseInt(d.value) >= req.query.cf_min && parseInt(d.value) <= req.query.cf_max)
+    // data = data.filter(d=>parseInt(d.sg_number) === 4)
 
-    data = data.slice(0,1500)
-    data = data.filter(d=>parseInt(d.value) > 4)
     let nodes = [];
     data.forEach(d=>{
       if(nodes.findIndex(x=>x.id === d.source) !== -1 ){}
       else{
-        nodes.push({id:d.source,rank:d.source_rank,clique:d.source_clique})
+        nodes.push({id:d.source,o:d.s_o,d:d.s_d})
       }
       if(nodes.findIndex(x=>x.id === d.target) !== -1 ){}
       else{
-        nodes.push({id:d.target,rank:d.target_rank,clique:d.target_clique})
+        nodes.push({id:d.target,o:d.t_o,d:d.t_d})
       }
     });
 
@@ -258,6 +230,72 @@ router.get("/f4_network_data", function(req, res, next) {
         }
       })
     });
+  });
+});
+
+
+router.get("/meal_info", function(req, res, next) {
+  sql_operation.query(`select * from meal_prefer where cluster= '${req.query.cluster}'`,data=>{
+    res.send(data)
+  });
+});
+
+router.get("/meal_dept_timeline", function(req, res, next) {
+  sql_operation.query(`select time,department,value from dept_20min_default where Canteen = '${req.query.Dept}'`,data=>{
+    res.send(data);
+  });
+});
+
+router.get("/meal_dept_timeline_pro", function(req, res, next) {
+  sql_operation.query(`select time,department,value from dept_20min_quarter where Canteen = '${req.query.Dept}'`,data=>{
+    res.send(data);
+  });
+});
+
+router.get("/dept07_graph", function(req, res, next) {
+  sql_operation.query(`select * from dept07_graph_pro`,data=>{
+
+    // data = data.filter(d=>parseInt(d.value) >= req.query.min && parseInt(d.value) <= req.query.max)
+    // data = data.filter(d=>parseInt(d.sg_number) >= req.query.cs_min && parseInt(d.sg_number) <= req.query.cs_max)
+    // data = data.filter(d=>parseInt(d.value) >= req.query.cf_min && parseInt(d.value) <= req.query.cf_max)
+    data = data.filter(d=>parseInt(d.value) > 4)
+
+    let nodes = [];
+    data.forEach(d=>{
+      if(nodes.findIndex(x=>x.id === d.source) !== -1 ){}
+      else{
+        nodes.push({id:d.source,ae:d.ae_s,d:d.d_s,degree:d.s_degree,score:d.source_rank})
+      }
+      if(nodes.findIndex(x=>x.id === d.target) !== -1 ){}
+      else{
+        nodes.push({id:d.target,ae:d.ae_t,d:d.d_t,degree:d.t_degree,score:d.target_rank})
+      }
+    });
+
+    res.send({
+      nodes:nodes,
+      links:data.map(d=>{
+        return {
+          'source':d.source,
+          'target':d.target,
+          'value':parseInt(d.value)
+        }
+      })
+    });
+  });
+});
+
+router.get("/orderliness_detail", function(req, res, next) {
+  sql_operation.query(`select list from orderliness_detail where card_id = '${req.query.card_id}'`,data=>{
+    if(data[0])
+      res.send(data[0].list.split(' ').map((d,i)=>{
+        return  {
+          name:i,
+          value: parseInt(d)
+        }
+      }));
+    else
+      res.send([])
   });
 });
 

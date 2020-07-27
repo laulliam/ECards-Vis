@@ -22,18 +22,23 @@ export default class DataManager {
     return axios.get('f1_parallel_data');
   }
 
-  static get_f1_mealRate_data() {
-    return axios.get('f1_mealRate_data');
+  static get_f1_mealRate_data(cluster) {
+    return axios.get('f1_mealRate_data',{params:{
+        cluster:cluster
+      }});
   }
 
-  static get_f1_graph_data() {
-    return axios.get('f1_graph_data');
+  static get_f1_graph_data(name) {
+    return axios.get('f1_graph_data',{
+      params:{
+        name:name
+      }
+    });
   }
 
   static get_f1_geoJson_data() {
     return axios.get('f1_geoJson_data');
   }
-
 
   static get_meal_default() {
     return axios.get('meal_dept_default');
@@ -59,15 +64,53 @@ export default class DataManager {
     return axios.get('dept_20min_half');
   }
 
-  // static get_meal_dept_quarter() {
-  //   return axios.get('meal_dept_quarter');
-  // }
-
-  static get_f1_iris_data() {
-    return axios.get('f1_iris_data');
+  static get_network_data(all_value) {
+    return axios.get('network_data',{params:{
+        cf_min:all_value.cf_value[0],
+        cf_max:all_value.cf_value[1],
+        cs_min:all_value.cs_value[0],
+        cs_max:all_value.cs_value[1],
+      }});
   }
-  static get_f4_network_data() {
-    return axios.get('f4_network_data');
+
+  static get_meal_prefer(cluster) {
+    return axios.get('meal_info',{
+      params:{
+        cluster:cluster
+      }
+    });
+  }
+
+  static get_meal_timeline(Dept) {
+    return axios.get('meal_dept_timeline',{
+      params:{
+        Dept:Dept
+      }
+    });
+  }
+
+  static get_meal_timeline_pro(Dept) {
+    return axios.get('meal_dept_timeline_pro',{
+      params:{
+        Dept:Dept
+      }
+    });
+  }
+
+  static get_orderliness_detail(card_id) {
+    return axios.get('orderliness_detail',{
+      params:{
+        card_id:card_id
+      }
+    });
+  }
+
+  static get_dept07_graph() {
+    return axios.get('dept07_graph');
+  }
+
+  static get_freq_words_data() {
+    return axios.get('freq_words_data');
   }
 
 }

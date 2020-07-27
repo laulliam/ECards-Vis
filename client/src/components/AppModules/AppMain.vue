@@ -18,7 +18,7 @@
 
 <script>
   import DataManager from "../../data/DataManager";
-  import geoJson from '../../../static/data.csv'
+  import geoJson from '../../../static/map.js'
   import * as d3 from 'd3'
   export default {
     name: "AppMain",

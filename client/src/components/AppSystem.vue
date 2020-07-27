@@ -3,30 +3,28 @@
     <Card id="card" :style="{margin: '50px 5px 0 5px', background: '#fff', minHeight: '92.5vh'}">
       <div id="container">
         <AppPie></AppPie>
-<!--        <AppMainTest></AppMainTest>-->
-        <!--        <AppMain></AppMain>-->
         <AppParallel></AppParallel>
-        <!--        <AppThemeRiver></AppThemeRiver>-->
         <AppExtraMSG></AppExtraMSG>
-<!--        <AppTest02></AppTest02>-->
-<!--        <AppTest03></AppTest03>-->
-<!--        <AppTest04></AppTest04>-->
-<!--        <AppTest05></AppTest05>-->
+
+        <AppMainTest></AppMainTest>
+        <AppTimeLine></AppTimeLine>
+
+        <AppControl></AppControl>
+        <AppNetwork></AppNetwork>
+        <AppAdjacentInfo></AppAdjacentInfo>
       </div>
     </Card>
   </div>
 </template>
 <script>
     import AppPie from "./AppModules/AppPie";
-    // import AppMain from "./AppModules/AppMain";
     import AppMainTest from "./AppModules/AppMainTest";
     import AppParallel from "./AppModules/AppParallel";
-    // import AppThemeRiver from "./AppModules/AppThemeRiver";
     import AppExtraMSG from "./AppModules/AppExtraMSG";
-    import AppTest02 from "./AppModules/AppTest02";
-    import AppTest03 from "./AppModules/AppTest03";
-    import AppTest04 from "./AppModules/AppTest04";
-    import AppTest05 from "./AppModules/AppTest05";
+    import AppTimeLine from "./AppModules/AppTimeLine";
+    import AppControl from "./AppModules/AppControl";
+    import AppNetwork from "./AppModules/AppNetwork";
+    import AppAdjacentInfo from "./AppModules/AppAdjacentInfo";
     export default {
         name: "AppFunction01",
         mounted(){
@@ -35,15 +33,13 @@
         },
         components:{
             AppPie,
-            // AppMain,
             AppMainTest,
             AppParallel,
-            // AppThemeRiver,
             AppExtraMSG,
-            AppTest02,
-            AppTest03,
-            AppTest04,
-            AppTest05
+            AppTimeLine,
+            AppControl,
+            AppNetwork,
+            AppAdjacentInfo
         }
     }
 </script>

@@ -9,8 +9,12 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   // 定义状态
   state: {
+    status:0,
     current_cluster:'',
-    f4_adjac:[]
+    current_canteen:'',
+    arrangeDinging:false,
+    all_value:{},
+    adj_nodes:[]
   },
   mutations: mutation,
   actions: action,
