@@ -2,8 +2,11 @@ const mutation = {
   status(state, payload) {
     state.status = JSON.parse(JSON.stringify(payload));
   },
-  all_value(state, payload) {
-    state.all_value = JSON.parse(JSON.stringify(payload));
+  cf_value(state, payload) {
+    state.cf_value = JSON.parse(JSON.stringify(payload));
+  },
+  df_value(state, payload) {
+    state.df_value = JSON.parse(JSON.stringify(payload));
   },
   current_cluster(state, payload) {
     state.current_cluster = JSON.parse(JSON.stringify(payload));

@@ -1,71 +1,118 @@
 <template>
   <div id="control_panel">
-    <div class="control">
-      &nbsp;Co-occurrence Frequency
-      <Slider v-model="cf_value" :max='cf_max' :min='cf_min' @on-change="test" range></Slider>
+    <div id="network_info">
+      <Card  :padding="0"  style="width: 250px">
+        <CellGroup>
+          <Cell title="Department" extra="A1" >
+            <Icon type="ios-school"></Icon>
+            <span>Department</span>
+          </Cell>
+          <Cell title="Number of Nodes" extra="378">
+            <Icon type="ios-ionic" />
+            <span>Number of Nodes</span>
+          </Cell>
+          <Cell title="Number of Links" extra="3251" >
+            <Icon type="ios-git-merge" />
+            <span>Number of Links</span>
+          </Cell>
+        </CellGroup>
+      </Card>
     </div>
     <div class="control">
-      &nbsp;Degree Filter
-      <Slider v-model="cs_value" :max='cs_max' :min='cs_min' range @on-change="cs_change"></Slider>
+      <Icon type="ios-analytics-outline" size="18"/>
+      <span>Co-occurrence Frequency</span>
+      <Slider v-model="cf_value" :max='cf_max' :min='cf_min' @on-change="cf_change" range></Slider>
     </div>
-    <div class="control" id="cf_chart" style="top:1%"></div>
-    <div class="control" id="df_chart" style="top:1%"></div>
-    <div class="control"></div>
-<!--    <div class="control">-->
-<!--      &nbsp;Degree Centrality-->
-<!--      <Slider v-model="value3" range></Slider>-->
-<!--    </div>-->
-<!--    <div class="control">-->
-<!--      &nbsp;Betweenness Centrality-->
-<!--      <Slider v-model="value4" range></Slider>-->
-<!--    </div>-->
-<!--    <div class="control">-->
-<!--      Orderliness-->
-<!--      <Tag color="#fff"></Tag>-->
-<!--      <Tag color="#d0619b"></Tag>-->
-<!--      <Tag color="rgba(208,97,155,0.88)"></Tag>-->
-<!--      <Tag color="rgba(208,97,155,0.76)"></Tag>-->
-<!--      <Tag color="rgba(208,97,155,0.61)"></Tag>-->
-<!--      <Tag color="rgba(208,97,155,0.38)"></Tag>-->
-<!--    </div>-->
-<!--    <div class="control">-->
-<!--      Diligence-->
-<!--      <Tag color="#fff"></Tag>-->
-<!--      <Tag color="#4ea397"></Tag>-->
-<!--      <Tag color="rgba(78,163,151,0.91)"></Tag>-->
-<!--      <Tag color="rgba(78,163,151,0.75)"></Tag>-->
-<!--      <Tag color="rgba(78,163,151,0.53)"></Tag>-->
-<!--      <Tag color="rgba(78,163,151,0.26)"></Tag>-->
-<!--    </div>-->
+    <div class="control">
+      <Icon type="ios-analytics-outline" size="18" />
+      <span>Academic Performance</span>
+      <Slider id="df-slider" v-model="df_value" range @on-change="df_change"></Slider>
+    </div>
+<!--    <div class="control" id="cf_chart" style="top:1%"></div>-->
+<!--    <div class="control" id="df_chart" style="top:1%"></div>-->
+    <!--    <div class="control">-->
+    <!--      &nbsp;Degree Centrality-->
+    <!--      <Slider v-model="value3" range></Slider>-->
+    <!--    </div>-->
+    <!--    <div class="control">-->
+    <!--      &nbsp;Betweenness Centrality-->
+    <!--      <Slider v-model="value4" range></Slider>-->
+    <!--    </div>-->
+    <!--    <div class="control">-->
+    <!--      Orderliness-->
+    <!--      <Tag color="#fff"></Tag>-->
+    <!--      <Tag color="#d0619b"></Tag>-->
+    <!--      <Tag color="rgba(208,97,155,0.88)"></Tag>-->
+    <!--      <Tag color="rgba(208,97,155,0.76)"></Tag>-->
+    <!--      <Tag color="rgba(208,97,155,0.61)"></Tag>-->
+    <!--      <Tag color="rgba(208,97,155,0.38)"></Tag>-->
+    <!--    </div>-->
+    <!--    <div class="control">-->
+    <!--      Diligence-->
+    <!--      <Tag color="#fff"></Tag>-->
+    <!--      <Tag color="#4ea397"></Tag>-->
+    <!--      <Tag color="rgba(78,163,151,0.91)"></Tag>-->
+    <!--      <Tag color="rgba(78,163,151,0.75)"></Tag>-->
+    <!--      <Tag color="rgba(78,163,151,0.53)"></Tag>-->
+    <!--      <Tag color="rgba(78,163,151,0.26)"></Tag>-->
+    <!--    </div>-->
     <div id="c_tool_title"></div>
   </div>
 </template>
 
 <script>
     import * as d3 from 'd3'
+    import DataManager from "../../data/DataManager";
     export default {
         name: "AppControl",
         data(){
             return {
-                cf_min:2,
-                cf_max:18,
-                cf_value:[10,18],
+                cf_min:3,
+                cf_max:115,
+                cf_value:[5,115],
 
-                cs_min:2,
-                cs_max:13,
-                cs_value:[2,13],
-
-                all_value:{
-                    cf_value:[],
-                    cs_value:[]
-                }
-
+                df_min:0,
+                df_max:100,
+                df_value:[0,100]
             }
         },
         mounted() {
             this.Init_Title()
-            this.Init('cf_chart')
-            this.Init('df_chart')
+            // this.Init('df_chart')
+            // DataManager.get_dept07_graph([1,115]).then(res=>{
+            //     let cf_data = d3.nest().key(d=>d.value).entries(res.data.links).map(d=>{
+            //         return {
+            //             name:parseInt(d.key),
+            //             value:d.values.length
+            //         }
+            //     }).sort((a,b)=>a.name - b.name)
+            //     let data1 = [...Array(d3.max(cf_data,d=>d.name))].map((d,i)=>{
+            //         if(cf_data.findIndex(s=>s.name === i+1) !== -1)
+            //             return cf_data[cf_data.findIndex(s=>s.name === i+1)].value
+            //         else
+            //             return 0
+            //     })
+            //
+            //     let df_data = d3.nest().key(d=>d.degree).entries(res.data.nodes).map(d=>{
+            //         return {
+            //             name:parseInt(d.key),
+            //             value:d.values.length
+            //         }
+            //     }).sort((a,b)=>a.name - b.name)
+            //
+            //     let data2 = [...Array(d3.max(df_data,d=>d.name))].map((d,i)=>{
+            //         if(df_data.findIndex(s=>s.name === i+1) !== -1)
+            //             return df_data[df_data.findIndex(s=>s.name === i+1)].value
+            //         else
+            //             return 0
+            //     })
+            //
+            //
+            //     this.Init('cf_chart',data1)
+            //     this.Init('df_chart',data2)
+            //     // console.log(data2);
+            //
+            // })
         },
         methods:{
             Init_Title() {
@@ -84,12 +131,13 @@
                 chart.setOption(option)
             },
 
-            Init(dom_id){
+            Init(dom_id,data){
                 let chart = this.$echarts.init(document.getElementById(dom_id))
                 let echarts = this.$echarts
                 let option = {
                     tooltip: {
-                        trigger: 'axis'
+                        trigger: 'axis',
+                        formatter:'{b}: {c}'
                     },
                     grid:{
                         top:'5%',
@@ -98,7 +146,7 @@
                     xAxis: {
                         type: 'category',
                         boundaryGap: false,//坐标轴两边留白
-                        data: ['12201', '12202', '12203','12204','12301','12302','12303','12304','12401', '12402', '12403','12404'],
+                        data: [...Array(data.length)].map((d,i)=>i+1),
                         axisTick:{//坐标轴刻度相关设置。
                             show: false,
                         },
@@ -151,9 +199,23 @@
 
                         }
                     ],
+                    dataZoom: [
+                        {
+                            show: false,
+                            realtime: true,
+                            start: 1,
+                            end: 40
+                        },
+                        {
+                            type: 'inside',
+                            realtime: true,
+                            start: 1,
+                            end: 40
+                        }
+                    ],
                     series: [
                         {
-                            name: '2019',
+                            name: 'cf',
                             type: 'line',
                             itemStyle: {
                                 normal: {
@@ -173,7 +235,7 @@
                                     }
                                 }
                             },
-                            data: [9, 5,7,8,6,7,8,7,7,6,8,6]
+                            data: data
                         }
                     ]
                 };
@@ -214,13 +276,13 @@
                     .attr('cx',d=>x(d)+7)
                     .attr('cy',5)
             },*/
-            test(value){
-                this.all_value.cf_value = value
-                this.$store.commit('all_value',this.all_value);
+            cf_change(value){
+                this.cf_value = value
+                this.$store.commit('cf_value',this.cf_value);
             },
-            cs_change(value){
-                this.all_value.cs_value = value
-                this.$store.commit('all_value',this.all_value);
+            df_change(value){
+                this.df_value = value
+                this.$store.commit('df_value',[value[0]/100,value[1]/100]);
             }
         }
     }
@@ -238,13 +300,23 @@
   #control_panel .control{
     position: relative;
     top:20%;
-    margin:0 auto;
-    /*margin-bottom: 1%;*/
-    /*margin-top: 1%;*/
-    float: left;
+    /*padding-left: 10%;*/
+    /*margin:0 auto;*/
+    margin-right: 3%;
+    /*margin-bottom: 20%;*/
+    float: right;
     width:50%;
-    height: 50%;
+    height: 35%;
     /*background-color: darkred;*/
+  }
+
+  #network_info{
+    position: absolute;
+    background: transparent;
+    top: 20%;
+    width: 43%;
+    height: 80%;
+    z-index: 20;
   }
 
   #c_tool_title{

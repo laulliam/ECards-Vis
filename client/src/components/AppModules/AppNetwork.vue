@@ -2,24 +2,24 @@
   <div id="network">
     <div id="n_tool_title"></div>
     <div id="legend">
-          <div class="control">
-            <span>Orderliness</span>
-            <Tag color="#d0619b"></Tag>
-            <Tag color="rgba(208,97,155,0.88)"></Tag>
-            <Tag color="rgba(208,97,155,0.76)"></Tag>
-            <Tag color="rgba(208,97,155,0.61)"></Tag>
-            <Tag color="rgba(208,97,155,0.38)"></Tag>
-          </div>
-          <div class="control">
-            <span>Diligence</span>
-            <Tag color="#4ea397"></Tag>
-            <Tag color="rgba(78,163,151,0.91)"></Tag>
-            <Tag color="rgba(78,163,151,0.75)"></Tag>
-            <Tag color="rgba(78,163,151,0.53)"></Tag>
-            <Tag color="rgba(78,163,151,0.26)"></Tag>
-          </div>
+      <div class="control">
+        <Icon type="ios-loading" color="#d0619b" /><span>Orderliness</span>
+        <Tag color="#d0619b" size="default"></Tag>
+        <Tag color="rgba(208,97,155,0.88)"></Tag>
+        <Tag color="rgba(208,97,155,0.76)"></Tag>
+        <Tag color="rgba(208,97,155,0.61)"></Tag>
+        <Tag color="rgba(208,97,155,0.38)"></Tag>
+      </div>
+      <div class="control">
+        <Icon type="ios-loading" color="#4ea397"/><span>Diligence</span>
+        <Tag color="#4ea397"></Tag>
+        <Tag color="rgba(78,163,151,0.91)"></Tag>
+        <Tag color="rgba(78,163,151,0.75)"></Tag>
+        <Tag color="rgba(78,163,151,0.53)"></Tag>
+        <Tag color="rgba(78,163,151,0.26)"></Tag>
+      </div>
     </div>
-    <div id="test04"></div>
+    <div id="network-main"></div>
   </div>
 </template>
 
@@ -29,8 +29,12 @@
     import * as d3 from 'd3'
     export default {
         name: "AppNetwork",
+        data(){
+            return {
+                value:[]
+            }
+        },
         mounted() {
-
             // DataManager.get_network_data({
             //     cf_value:[10,18],
             //     cs_value:[2,13]
@@ -38,15 +42,16 @@
             //     this.Init(res.data);
             // });
 
-            DataManager.get_dept07_graph().then(res=>{
+            DataManager.get_dept07_graph([5,115]).then(res=>{
                 this.Init(res.data)
+                // console.log(res.data);
             })
         },
         methods:{
             Init(data){
 
-                let width = document.getElementById('test04').offsetWidth;
-                let height = document.getElementById('test04').offsetHeight;
+                let width = document.getElementById('network-main').offsetWidth;
+                let height = document.getElementById('network-main').offsetHeight;
 
                 let margin = {top: 25, right: 20, bottom: 30, left: 30}
 
@@ -56,7 +61,9 @@
                     // .translateExtent([[margin.left, -Infinity], [width - margin.right, Infinity]])
                     .on("zoom", zoomed);
 
-                let svg = d3.select('#test04')
+
+
+                let svg = d3.select('#network-main')
                     .append("svg")
                     // .attr('width',width)
                     // .attr('height',height)
@@ -66,7 +73,6 @@
                     .attr("stroke-linecap", "round")
                     .attr('transform','translate(0,'+margin.top+')')
                     .call(zoom)
-
 
                 function zoomed() {
                     // graph_g.attr("transform", "translate(" + 0 + ")scale(" + d3.event.transform.k + ")");
@@ -107,14 +113,13 @@
                     .attr("stroke-width", d => path_scale(d.value))
                     .on('mouseover',function (d) {
                         d3.select('body').style('cursor','pointer')
-
                         d3.select(this).style("stroke", "#cb6d89")
                     })
                     .on('mouseout',function (d) {
                         d3.select('body').style('cursor','')
                         d3.select(this).style("stroke", "#999")
                     })
-               ;
+                ;
 
                 let drag = simulation => {
 
@@ -299,10 +304,10 @@
                     })
 
                     link
-                    .attr("x1", d => d.source.x)
-                    .attr("y1", d => d.source.y)
-                    .attr("x2", d => d.target.x)
-                    .attr("y2", d => d.target.y)
+                        .attr("x1", d => d.source.x)
+                        .attr("y1", d => d.source.y)
+                        .attr("x2", d => d.target.x)
+                        .attr("y2", d => d.target.y)
 
                     // node
                     //   .attr("cx", d => d.x)
@@ -341,18 +346,37 @@
 
                 // svg.call(legend)
 
+                console.log( d3.select('#df-slider').select('input'));
+                d3.select('#df-slider').select('input').on('mouseover',function () {
+                    console.log(this);
+                });
+
+
             }
         },
         computed:{
-            all_value(){
-                return this.$store.state.all_value;
+            cf_value(){
+                return this.$store.state.cf_value;
+            },
+            df_value(){
+                return this.$store.state.df_value;
             },
         },
         watch:{
-            all_value:{
-                handler(all_value){
-                    DataManager.get_network_data(all_value).then(res=>{
-                        d3.select('#test04').select('svg').remove();
+            cf_value:{
+                handler(cf_value){
+                    DataManager.get_dept07_graph(cf_value).then(res=>{
+                        d3.select('#network-main').select('svg').remove();
+                        this.Init(res.data)
+                    })
+                }
+            },
+            df_value:{
+                handler(df_value){
+                    this.value = df_value
+                    // console.log(df_value);
+                    DataManager.get_dept07_graph_ap(df_value).then(res=>{
+                        d3.select('#network-main').select('svg').remove();
                         this.Init(res.data)
                     })
                 }
@@ -366,14 +390,14 @@
   #network{
     position: absolute;
     right: 0;
-    top: 17%;;
+    top: 15.5%;;
     width: 27%;
-    height: 53%;
+    height: 54.5%;
     overflow: hidden;
     /*background-color: #ff8fcb;*/
   }
 
-  #test04{
+  #network-main{
     position: relative;
     width: 100%;
     height: 100%;
@@ -383,10 +407,11 @@
     position: relative;
     margin:0 auto;
     float: left;
-    /*padding-left: 6%;*/
+    padding-left: 2.8%;
     /*margin-top: 1%;*/
     /*background-color: darkred;*/
-    width: 50%;
+    width: 45%;
+    z-index: 99;
   }
 
   .control span{

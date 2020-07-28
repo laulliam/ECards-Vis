@@ -13,7 +13,8 @@ const store = new Vuex.Store({
     current_cluster:'',
     current_canteen:'',
     arrangeDinging:false,
-    all_value:{},
+    cf_value:[],
+    df_value:[],
     adj_nodes:[]
   },
   mutations: mutation,

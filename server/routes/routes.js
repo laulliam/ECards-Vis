@@ -3,6 +3,7 @@ var router = express.Router();
 var path = require('path')
 var fs = require('fs')
 var d3 = require('d3');
+var nx = require('jsnetworkx')
 
 var sql_operation = require("./operation");
 
@@ -257,18 +258,28 @@ router.get("/dept07_graph", function(req, res, next) {
 
     // data = data.filter(d=>parseInt(d.value) >= req.query.min && parseInt(d.value) <= req.query.max)
     // data = data.filter(d=>parseInt(d.sg_number) >= req.query.cs_min && parseInt(d.sg_number) <= req.query.cs_max)
-    // data = data.filter(d=>parseInt(d.value) >= req.query.cf_min && parseInt(d.value) <= req.query.cf_max)
-    data = data.filter(d=>parseInt(d.value) > 4)
+    data = data.filter(d=>parseInt(d.value) >= req.query.cf_min && parseInt(d.value) <= req.query.cf_max)
+    // data = data.filter(d=>parseInt(d.value) > 4)
+
+    // let G = new nx.Graph();
+    //
+    // data.forEach(d=>{
+    //   G.addEdge(parseInt(d.source),parseInt(d.target))
+    // })
+
+    // console.log(G.subgraph());
+
+    // res.send(G.subgraph())
 
     let nodes = [];
     data.forEach(d=>{
-      if(nodes.findIndex(x=>x.id === d.source) !== -1 ){}
+      if(nodes.findIndex(x=>x.id === parseInt(d.source)) !== -1 ){}
       else{
-        nodes.push({id:d.source,ae:d.ae_s,d:d.d_s,degree:d.s_degree,score:d.source_rank})
+        nodes.push({id:parseInt(d.source),ae:d.ae_s,d:d.d_s,score:d.source_rank})
       }
-      if(nodes.findIndex(x=>x.id === d.target) !== -1 ){}
+      if(nodes.findIndex(x=>x.id === parseInt(d.target)) !== -1 ){}
       else{
-        nodes.push({id:d.target,ae:d.ae_t,d:d.d_t,degree:d.t_degree,score:d.target_rank})
+        nodes.push({id:parseInt(d.target),ae:d.ae_t,d:d.d_t,score:d.target_rank})
       }
     });
 
@@ -276,8 +287,52 @@ router.get("/dept07_graph", function(req, res, next) {
       nodes:nodes,
       links:data.map(d=>{
         return {
-          'source':d.source,
-          'target':d.target,
+          'source':parseInt(d.source),
+          'target':parseInt(d.target),
+          'value':parseInt(d.value)
+        }
+      })
+    });
+  });
+});
+
+router.get("/dept07_graph_ap", function(req, res, next) {
+  sql_operation.query(`select * from dept07_graph_pro`,data=>{
+
+    // data = data.filter(d=>parseInt(d.value) >= req.query.min && parseInt(d.value) <= req.query.max)
+    // data = data.filter(d=>parseInt(d.sg_number) >= req.query.cs_min && parseInt(d.sg_number) <= req.query.cs_max)
+    data = data.filter(d=>parseFloat(d.source_rank) >= req.query.ap_min && parseFloat(d.source_rank) <= req.query.ap_max)
+        .filter(d=>parseFloat(d.target_rank) >= req.query.ap_min && parseFloat(d.target_rank) <= req.query.ap_max)
+    data = data.filter(d=>parseInt(d.value) > 2)
+
+    // let G = new nx.Graph();
+    //
+    // data.forEach(d=>{
+    //   G.addEdge(parseInt(d.source),parseInt(d.target))
+    // })
+
+    // console.log(G.subgraph());
+
+    // res.send(G.subgraph())
+
+    let nodes = [];
+    data.forEach(d=>{
+      if(nodes.findIndex(x=>x.id === parseInt(d.source)) !== -1 ){}
+      else{
+        nodes.push({id:parseInt(d.source),ae:d.ae_s,d:d.d_s,score:d.source_rank})
+      }
+      if(nodes.findIndex(x=>x.id === parseInt(d.target)) !== -1 ){}
+      else{
+        nodes.push({id:parseInt(d.target),ae:d.ae_t,d:d.d_t,score:d.target_rank})
+      }
+    });
+
+    res.send({
+      nodes:nodes,
+      links:data.map(d=>{
+        return {
+          'source':parseInt(d.source),
+          'target':parseInt(d.target),
           'value':parseInt(d.value)
         }
       })

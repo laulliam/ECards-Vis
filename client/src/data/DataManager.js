@@ -105,8 +105,22 @@ export default class DataManager {
     });
   }
 
-  static get_dept07_graph() {
-    return axios.get('dept07_graph');
+  static get_dept07_graph(cf_value) {
+    return axios.get('dept07_graph',{
+      params:{
+        cf_min:cf_value[0],
+        cf_max:cf_value[1]
+      }
+    });
+  }
+
+  static get_dept07_graph_ap(ap_value) {
+    return axios.get('dept07_graph_ap',{
+      params:{
+        ap_min:ap_value[0],
+        ap_max:ap_value[1]
+      }
+    });
   }
 
   static get_freq_words_data() {

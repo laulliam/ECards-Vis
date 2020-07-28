@@ -3,16 +3,31 @@
     <div id="adjacent_info_title"></div>
     <div id="wordCloud"></div>
     <div id="wordCloud-main"></div>
+    <div id="adjac_legend">
+      <Tag checkable v-for="(id,index) in nodes" :key="id" :color="color[index]">{{id}}</Tag>
+    </div>
   </div>
 </template>
 
 <script>
     import DataManager from "../../data/DataManager";
     import '../../../static/echarts-wordcloud.min'
-    import image from '../../../static/Book.png'
     import * as d3 from 'd3'
     export default {
         name: "AppAdjacentInfo",
+        data(){
+            return {
+                nodes:[],
+                color: [
+                    "#d0648a",
+                    "#7bd9a5",
+                    "#f58db2",
+                    "#22c3aa",
+                    "#f2b3c9",
+                    "#4ea397"
+                ]
+            }
+        },
         mounted() {
             this.Init_Title()
             this.Init()
@@ -109,8 +124,6 @@
 
                 svg.call(g => g.append("g").attr('transform','translate(-150,20)').call(xAxis));
                 svg.call(g => g.append("g").attr('transform','translate(-150,20)').call(yAxis));
-
-
 
                 // let y1 = d3.scaleLinear()
                 //     .domain([0,d3.max(data1,d=>d.value)])
@@ -656,6 +669,7 @@
         watch:{
             adj_nodes:{
                 handler(nodes){
+                    this.nodes = nodes
                     let color = [
                         "#d0648a",
                         "#7bd9a5",
@@ -664,6 +678,24 @@
                         "#f2b3c9",
                         "#4ea397"
                     ]
+
+                    // let legend_g = d3.select('#adjacent_info')
+                    //     .append('div')
+                    //     .style({
+                    //         position:'absolute',
+                    //         width:'300px',
+                    //         height:'50px',
+                    //         'z-index':50
+                    //     })
+                    //
+                    // legend_g.selectAll('.adjac_legend')
+                    //     .data(nodes)
+                    //     .enter()
+                    //     .append('Tag')
+                    //     .attr('class','adjac_legend')
+                    //     .attr('color',(d,i)=>color[i])
+                    //     .html(d=>d)
+
                     d3.select('#adjacent_info').selectAll('.radial_line').remove()
                     d3.select('#adjacent_info').selectAll('.radial_area').remove()
 
@@ -751,11 +783,13 @@
     /*background-color: #ff8f44;*/
   }
 
-  #adjacent{
+  #adjac_legend{
     position: absolute;
     left: 0;
-    width: 55%;
-    height: 100%;
+    top:10%;
+    width: 100%;
+    height: 10%;
+    z-index: 99;
     /*background-color: #f77d8c;*/
   }
 

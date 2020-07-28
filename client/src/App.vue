@@ -40,6 +40,11 @@
     font-size:12px;
   }
 
+  .ivu-cell, .ivu-cell-title {
+    /*line-height: 24px;*/
+    font-size: 12px!important;
+  }
+
   .ivu-tag-text{
     font-size:9px;
   }
@@ -57,7 +62,7 @@
   }
 
   .ivu-btn {
-    padding: 0 5px;
+    padding: 0 15px;
   }
   .ivu-card.ivu-card-dis-hover.ivu-card-bordered:hover {
      border-color: #ffffff;
@@ -80,9 +85,13 @@
   }
   .ivu-slider-wrap {
     /*align-items: center;*/
-    width: 80%;
-    left: 10%;
+    width: 75%;
+    left: 4%;
     bottom:6%;
+  }
+
+  .ivu-tag {
+    margin: 1px;
   }
 
   .ivu-slider-button {
