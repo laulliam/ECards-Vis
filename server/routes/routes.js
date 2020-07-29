@@ -67,7 +67,7 @@ router.get("/f1_parallel_data", function(req, res, next) {
       return {
         // name:povertyIndex[parseInt(d.key)],
         name:d.key,
-        data:d.values.map(s=>[s.cluster,s.total,s.cafeteria,s.store,s.charge,s.count])
+        data:d.values.map(s=>[s.cluster,s.total,s.cafeteria,s.store,s.count,parseInt(s.charge)])
       }
     })
     res.send(data);

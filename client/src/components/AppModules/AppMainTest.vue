@@ -30,10 +30,10 @@
       <div id="tool_title"></div>
       <div id="tool_info">
         <CellGroup>
-          <Cell title="Staggering Peak Dinging" label="    one student, one table" />
+          <Cell title="Staggering Peak Dinging" label="one student, one table" />
           <Cell title="With Switch">
-            <Button type="success" style="width: 100px;">Arrange</Button>
-            <Button type="warning" style="width: 100px">Default</Button>
+            <Button type="success" color="#ffffff" style="width: 100px;">Arrange</Button>
+            <Button type="warning"  color="#ffffff" style="width: 100px">Default</Button>
           </Cell>
         </CellGroup>
       </div>
@@ -259,8 +259,8 @@
                         .attr("stroke", "#000")
                         .attr("stroke-width", 0.3)
                         .attr("opacity", 0.2)
-                        .attr('fill', '#94898e');
-                    // .attr("fill", "#fff");
+                        // .attr('fill', '#94898e');
+                    .attr("fill", "#fff");
 
                     map_chart.sites = map_chart.g
                         .selectAll(".site")

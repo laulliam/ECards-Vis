@@ -122,13 +122,13 @@
                         width:'30%',
                         height:'70%',
                         left:8,
-                        y:'20%',
+                        y:'25%',
                         containLabel: true
                     }],
                     series: [{
                             name:'',
                             type: 'pie',
-                            y:'8%',
+                            y:'12%',
                             roseType: 'radius',
                             center: ['60%', '50%'],
                             radius: ['60%', '80%'],
@@ -156,7 +156,7 @@
                         }, {
                             name:'out_label',
                             type: 'pie',
-                            y:'8%',
+                            y:'12%',
                             roseType: 'radius',
                             center: ['60%', '50%'],
                             radius: ['65%', '90%'],

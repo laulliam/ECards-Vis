@@ -101,7 +101,7 @@
                 let graph_g = svg.append('g')
 
                 let path_scale = d3.scaleLinear()
-                    .domain(d3.extent(data.links,d=>d.value))
+                    .domain([1,115])
                     .range([1,18])
 
                 let link = graph_g.append("g")
@@ -163,23 +163,25 @@
                     // .attr("fill", '#ccc')
                     .call(drag(simulation));
 
+                let angle = d3.scaleBand()
+                    .domain([1,2])
+                    .range([0, 2 * Math.PI])
+                // .align(0)
+
+                let o_scale = d3.scaleLinear()
+                    .domain(d3.extent(data.nodes,d=>parseFloat(d.ae)))
+                    .range([1,0])
+
                 node.append('circle')
                     .attr("r", 4)
                     .attr("fill", '#ff3f63')
                     .attr('opacity',d=>score_scale(parseFloat(d.score)))
                     .append('title')
                     .text(d=>{
-                        return `CardNo:${parseInt(d.id)} - O:${parseFloat(d.ae).toFixed(3)} D:${d.d} Rank:${d.score}`
+                        return `CardNo:${parseInt(d.id)} - O:${parseFloat(o_scale(parseFloat(d.ae))).toFixed(2)} D:${d.d} Rank:${d.score}`
                     })
 
-                let angle = d3.scaleBand()
-                    .domain([1,2])
-                    .range([0, 2 * Math.PI])
-                // .align(0)
 
-                let o_scale = d3.scaleOrdinal()
-                    .domain(d3.extent(data.nodes,d=>parseFloat(d.ae)))
-                    .range([1,.2])
 
                 let d_scale = d3.scaleLinear()
                     .domain(['0', '1', '2', '3', '4'])
