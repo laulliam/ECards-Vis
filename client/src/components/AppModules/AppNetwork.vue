@@ -31,6 +31,7 @@
         name: "AppNetwork",
         data(){
             return {
+                g:'',
                 value:[]
             }
         },
@@ -45,10 +46,13 @@
             DataManager.get_dept07_graph([5,115]).then(res=>{
                 this.Init(res.data)
                 // console.log(res.data);
+                // d3.selectAll('.ivu-cell-extra').data(['A1',res.data.nodes.length,res.data.links.length]).html(d=>d)
             })
         },
         methods:{
             Init(data){
+
+                d3.selectAll('#control_panel .ivu-cell-extra').data(['A1',data.nodes.length,data.links.length]).html(d=>d)
 
                 let width = document.getElementById('network-main').offsetWidth;
                 let height = document.getElementById('network-main').offsetHeight;
@@ -98,11 +102,11 @@
                     .force("x", d3.forceX())
                     .force("y", d3.forceY());
 
-                let graph_g = svg.append('g')
+                let graph_g = svg.append('g')//.call(zoom).call(zoom.transform, d3.zoomIdentity.scale(5,5))
 
                 let path_scale = d3.scaleLinear()
                     .domain([1,115])
-                    .range([1,18])
+                    .range([1,10])
 
                 let link = graph_g.append("g")
                     .attr("stroke", "#999")
@@ -118,8 +122,10 @@
                     .on('mouseout',function (d) {
                         d3.select('body').style('cursor','')
                         d3.select(this).style("stroke", "#999")
-                    })
-                ;
+                    });
+
+                link.append('title')
+                    .text(d=>d.value)
 
                 let drag = simulation => {
 
@@ -156,6 +162,7 @@
                     .selectAll("g")
                     .data(data.nodes)
                     .join("g")
+                    .attr('id',d=>'node_'+d.id)
                     .attr('transform',(d)=>{
                         return 'translate('+d.x+','+d.y+')'
                     })
@@ -172,16 +179,27 @@
                     .domain(d3.extent(data.nodes,d=>parseFloat(d.ae)))
                     .range([1,0])
 
+                // node.append('circle')
+                //     .attr("r", 5)
+                //     // .attr("fill", '#ff3f63')
+                //     .attr("fill", '#fff')
+                //     .append('title')
+                //     .text(d=>{
+                //         // return `CardNo:${parseInt(d.id)} - O:${parseFloat(o_scale(parseFloat(d.ae))).toFixed(2)} D:${d.d} AP:${d.score}`
+                //         return `CardNo:${parseInt(d.id)} - O:${parseFloat(o_scale(parseFloat(d.ae))).toFixed(2)} D:${d.d} AP:${d.score}`
+                //     })
+
                 node.append('circle')
                     .attr("r", 4)
-                    .attr("fill", '#ff3f63')
-                    .attr('opacity',d=>score_scale(parseFloat(d.score)))
+                    .attr('class',d=>'group group'+parseInt(d.class))
+                    // .attr("fill", d=>d.class === '3.0'?'#dd5000':'#ddd')
+                    .attr("fill", '#ddd')
+                    // .attr('opacity',d=>score_scale(parseFloat(d.score)))
+                    .attr('opacity',1)
                     .append('title')
                     .text(d=>{
-                        return `CardNo:${parseInt(d.id)} - O:${parseFloat(o_scale(parseFloat(d.ae))).toFixed(2)} D:${d.d} Rank:${d.score}`
+                        return `CardNo:${parseInt(d.id)} - O:${parseFloat(d.ae).toFixed(2)} D:${d.d}`
                     })
-
-
 
                 let d_scale = d3.scaleLinear()
                     .domain(['0', '1', '2', '3', '4'])
@@ -232,17 +250,41 @@
                         link.style('stroke',(o)=>{
                             return (o.source.id === d.id || o.target.id === d.id) ? '#9d436a':'#999'
                         })
+
+                        d3.select(`.group${parseInt(d.class)}_o_path`)
+                            .transition()
+                            .duration(200)
+                            .attr("d", d3.arc()
+                                .innerRadius(28)
+                                .outerRadius(38)
+                                .startAngle(Math.PI*1.05)
+                                .endAngle(2*Math.PI))
+
+                        d3.select(`.group${parseInt(d.class)}_d_path`)
+                            .transition()
+                            .duration(200)
+                            .attr("d", d3.arc()
+                                .innerRadius(28)
+                                .outerRadius(38)
+                                .startAngle(0)
+                                .endAngle(Math.PI*0.95))
                     })
-                    .on('mouseout',function(){
+                    .on('mouseout',function(d){
                         d3.select('body').style('cursor','')
                         // d3.select(this).select('circle').transition().duration(200).attr('opacity',0)
-                        d3.select(this).selectAll('.o_path').attr("d", d3.arc()
+                        d3.select(this).selectAll('.o_path')
+                            .transition()
+                            .duration(200)
+                            .attr("d", d3.arc()
                             .innerRadius(5)
                             .outerRadius(7)
                             .startAngle(Math.PI)
                             .endAngle(Math.PI*2))
 
-                        d3.select(this).selectAll('.d_path').attr("d", d3.arc()
+                        d3.select(this).selectAll('.d_path')
+                            .transition()
+                            .duration(200)
+                            .attr("d", d3.arc()
                             .innerRadius(5)
                             .outerRadius(7)
                             .startAngle(0)
@@ -250,15 +292,144 @@
 
 
                         link.style('stroke','#999')
+
+                        d3.select(`.group${parseInt(d.class)}_o_path`)
+                            .transition()
+                            .duration(200)
+                            .attr("d", d3.arc()
+                                .innerRadius(28)
+                                .outerRadius(35)
+                                .startAngle(Math.PI*1.05)
+                                .endAngle(2*Math.PI))
+
+                        d3.select(`.group${parseInt(d.class)}_d_path`)
+                            .transition()
+                            .duration(200)
+                            .attr("d", d3.arc()
+                                .innerRadius(28)
+                                .outerRadius(35)
+                                .startAngle(0)
+                                .endAngle(Math.PI*0.95))
                     })
                     .on('click',(d)=>{
-                        let adj_nodes = [parseInt(d.id)]
-                        data.links.forEach(o=>{
-                            if(o.source.id === d.id || o.target.id === d.id){
-                                adj_nodes.push(o.source.id | o.target.id)
-                            }
-                        })
-                        this.$store.commit('adj_nodes',adj_nodes)
+
+                        let sim_nodes = []
+
+                        d3.selectAll('.out_circle').remove()
+                        if(d.id === temp_id){
+                            // d3.selectAll('.out_circle').remove()
+                            temp_id = ''
+                        }
+                        else{
+                            d3.selectAll('.out_circle').remove()
+                            temp_id = d.id;
+                            let adj_nodes = []
+                            link.each(o=>{
+                                if(o.source.id === d.id ){
+                                    adj_nodes.push(o.target.id )
+                                }
+                                if(o.target.id === d.id){
+                                    adj_nodes.push( o.source.id)
+                                }
+                            })
+
+                            // adj_nodes.forEach((s)=>{
+                            //     console.log(s);
+                            //     d3.select('#node_'+s)
+                            //         .append('circle')
+                            //         .attr('class','out_circle')
+                            //         .attr('r',10)
+                            //         .attr('fill','none')
+                            //         .attr('stroke','#c51706')
+                            //         .attr('stroke-opacity',.6)
+                            // })
+                            this.$store.commit('adj_nodes',adj_nodes)
+
+                            let circle = d3.select('#node_'+d.id)
+                                .append('circle')
+                                .attr('class','out_circle')
+                                .attr('r',10)
+                                .attr('fill','none')
+                                .attr('stroke','#432df2')
+                                .attr('stroke-opacity',0.7)
+                                .attr('stroke-width',4)
+
+                            data.nodes.forEach((node)=>{
+                                if(d.id !== node.id)
+                                    if(node.d === d.d /*&& Math.abs(score_scale(parseFloat(node.score))-score_scale(parseFloat(d.score))) <= 0.12*/){
+                                        // console.log(node);
+                                        // let temp = Math.abs(o_scale(parseFloat(node.ae))-o_scale(parseFloat(d.ae)));
+                                        // // console.log(temp);
+                                        // let circle = d3.select('#node_'+node.id)
+                                        //     .append('circle')
+                                        //     .attr('class','out_circle')
+                                        //     .attr('r',10)
+                                        //     .attr('fill','none')
+                                        //     .attr('stroke','#c51706')
+                                        //     .attr('stroke-opacity',0.8-temp*10)
+                                        //     .attr('stroke-width',4)
+
+                                        // console.log(node.ae,'       ',d.ae);
+
+                                        // console.log(node.ae > d.ae?(d.ae/node.ae):(node.ae/d.ae));
+
+                                        sim_nodes.push({
+                                            'card_id':node.id,
+                                            'O':parseFloat(node.ae).toFixed(3),
+                                            'D':node.d,
+                                            'S':(node.ae > d.ae?(d.ae/node.ae):(node.ae/d.ae)).toFixed(3)
+                                        })
+
+                                        // let run = ()=>{
+                                        //     circle.transition()
+                                        //         .duration(500)
+                                        //         .attr('r',10)
+                                        //         .attr('opacity',.5)
+                                        //         .transition()
+                                        //         .duration(500)
+                                        //         .delay(200)
+                                        //         .attr('r',7)
+                                        //         .attr('opacity',0.8-temp*10)
+                                        //         .on('end',run)
+                                        // }
+                                        // run();
+                                    }
+                                // if(Math.abs(parseFloat(node.score)-parseFloat(d.score)) <= 0.05){
+                                //
+                                //     d3.select('#node_'+node.id)
+                                //         .append('circle')
+                                //         .attr('class','out_circle')
+                                //         .attr('r',10)
+                                //         .attr('fill','none')
+                                //         .attr('stroke','#c51706')
+                                //         .attr('stroke-opacity',.6)
+                                // }
+                            })
+
+                            // console.log(sim_nodes);
+                            sim_nodes = sim_nodes.sort((a,b)=>b.S - a.S).slice(0,8)
+                            sim_nodes.forEach(s=>{
+                                let temp = Math.abs(s.O-o_scale(parseFloat(d.ae)));
+
+                                console.log(s.S);
+                                d3.select('#node_'+s.card_id)
+                                    .append('circle')
+                                    .attr('class','out_circle')
+                                    .attr('r',10)
+                                    .attr('fill','none')
+                                    .attr('stroke','#c51706')
+                                    .attr('stroke-opacity',s.S-.3)
+                                    .attr('stroke-width',4)
+                            })
+
+                            sim_nodes.unshift({
+                                'card_id':d.id,
+                                'O':parseFloat(d.ae).toFixed(3),
+                                'D':d.d
+                            })
+                            this.$store.commit('sim_nodes',sim_nodes)
+
+                        }
                     })
 
                 // node.call(g=>g.append('g').selectAll('.path')
@@ -293,6 +464,10 @@
                 //     .endAngle(function(d) { return angle(d) + angle.bandwidth() /1.2; }));
 
                 let radius = 20
+
+                let temp_id = ''
+
+                graph_g.attr('transform','translate(70,80) scale(.67)')
 
                 simulation.on("tick", () => {
                     // node
@@ -348,10 +523,10 @@
 
                 // svg.call(legend)
 
-                console.log( d3.select('#df-slider').select('input'));
-                d3.select('#df-slider').select('input').on('mouseover',function () {
-                    console.log(this);
-                });
+                // console.log( d3.select('#df-slider').select('input'));
+                // d3.select('#df-slider').select('input').on('mouseover',function () {
+                //     console.log(this);
+                // });
 
 
             }
@@ -362,6 +537,9 @@
             },
             df_value(){
                 return this.$store.state.df_value;
+            },
+            group(){
+                return this.$store.state.group;
             },
         },
         watch:{
@@ -382,7 +560,21 @@
                         this.Init(res.data)
                     })
                 }
-            }
+            },
+            // group:{
+            //     handler(g,o){
+            //         // console.log(g);
+            //         if(g === this.g){
+            //             d3.selectAll('.group').attr('fill','#ddd')
+            //             this.g = ''
+            //         }
+            //         else{
+            //             this.g = g
+            //             d3.selectAll('.group'+g).attr('fill','#dd5924')
+            //             d3.selectAll('.group'+o).attr('fill','#ddd')
+            //         }
+            //     }
+            // }
         }
 
     }
@@ -429,9 +621,20 @@
     /*background-color: #ccc;*/
   }
 
+  #check_div{
+    position: absolute;
+    top: 5%;
+    /*width: 20%;*/
+    left: 2%;
+    height: 10%;
+    z-index: 100;
+    background: transparent;
+  }
+
   #legend{
     position: absolute;
     width: 100%;
     /*background-color: #ccc;*/
   }
+
 </style>

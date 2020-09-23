@@ -3,15 +3,13 @@
     <Card id="card" :style="{margin: '50px 5px 0 5px', background: '#fff', minHeight: '92.5vh'}">
       <div id="container">
         <AppPie></AppPie>
-        <AppParallel></AppParallel>
-        <AppExtraMSG></AppExtraMSG>
-
+        <AppPovertyPortray></AppPovertyPortray>
+        <AppTable></AppTable>
         <AppMainTest></AppMainTest>
         <AppTimeLine></AppTimeLine>
-
         <AppControl></AppControl>
         <AppNetwork></AppNetwork>
-        <AppAdjacentInfo></AppAdjacentInfo>
+        <AppPortray></AppPortray>
       </div>
     </Card>
   </div>
@@ -25,6 +23,10 @@
     import AppControl from "./AppModules/AppControl";
     import AppNetwork from "./AppModules/AppNetwork";
     import AppAdjacentInfo from "./AppModules/AppAdjacentInfo";
+    import AppTable from "./AppModules/AppTable";
+    import AppPortray from "./AppModules/AppPortray";
+    import AppPovertyPortray from "./AppModules/AppPovertyPortray";
+
     export default {
         name: "AppFunction01",
         mounted(){
@@ -39,7 +41,10 @@
             AppTimeLine,
             AppControl,
             AppNetwork,
-            AppAdjacentInfo
+            AppAdjacentInfo,
+            AppTable,
+            AppPortray,
+            AppPovertyPortray
         }
     }
 </script>

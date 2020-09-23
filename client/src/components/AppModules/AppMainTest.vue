@@ -7,33 +7,33 @@
           <Button icon="md-remove"></Button>
         </ButtonGroup>
       </div>
-      <div id="tool_slider">
-        <Card title="Menu Options" icon="ios-options" :padding="0"  style="width: 180px" dis-hover>
-          <CellGroup>
-            <Cell title="Stacked Bar">
-              <i-switch v-model="stackedBar" slot="extra" size="small" @on-change="show_stacked"/>
-            </Cell>
-            <Cell title="Extra Info">
-              <i-switch v-model="extraInfo" slot="extra" size="small" @on-change="show_extra" />
-            </Cell>
-            <Cell title="Area Line">
-              <i-switch v-model="areaLine" slot="extra" size="small" @on-change="show_area" />
-            </Cell>
-<!--            <Cell title="Staggering Peak Dinging" label="one student, one table" />
-            <Cell title="With Switch" style="text-align: center">
-              <Button type="success" style="width: 70px;">Arrange</Button>
-              <Button type="warning" style="width: 70px">Default</Button>
-            </Cell>-->
-          </CellGroup>
-        </Card>
-      </div>
+      <!--      <div id="tool_slider">-->
+      <!--        <Card title="Menu Options" icon="ios-options" :padding="0"  style="width: 180px" dis-hover>-->
+      <!--          <CellGroup>-->
+      <!--            <Cell title="Stacked Bar">-->
+      <!--              <i-switch v-model="stackedBar" slot="extra" size="small" @on-change="show_stacked"/>-->
+      <!--            </Cell>-->
+      <!--            <Cell title="Extra Info">-->
+      <!--              <i-switch v-model="extraInfo" slot="extra" size="small" @on-change="show_extra" />-->
+      <!--            </Cell>-->
+      <!--            <Cell title="Area Line">-->
+      <!--              <i-switch v-model="areaLine" slot="extra" size="small" @on-change="show_area" />-->
+      <!--            </Cell>-->
+      <!--&lt;!&ndash;            <Cell title="Staggering Peak Dinging" label="one student, one table" />-->
+      <!--            <Cell title="With Switch" style="text-align: center">-->
+      <!--              <Button type="success" style="width: 70px;">Arrange</Button>-->
+      <!--              <Button type="warning" style="width: 70px">Default</Button>-->
+      <!--            </Cell>&ndash;&gt;-->
+      <!--          </CellGroup>-->
+      <!--        </Card>-->
+      <!--      </div>-->
       <div id="tool_title"></div>
       <div id="tool_info">
         <CellGroup>
           <Cell title="Staggering Peak Dinging" label="one student, one table" />
           <Cell title="With Switch">
-            <Button type="success" color="#ffffff" style="width: 100px;">Arrange</Button>
-            <Button type="warning"  color="#ffffff" style="width: 100px">Default</Button>
+            <Button id="arrange" color="#ffffff" style="width: 100px;">Execution</Button>
+            <Button id="arrange-default" color="#ffffff" style="width: 100px">Default</Button>
           </Cell>
         </CellGroup>
       </div>
@@ -65,22 +65,22 @@
                     {
                         name: "第二食堂",
                         name_: "C2",
-                        coordinate: [120.613338882, 31.925250105]
+                        coordinate: [120.613338882, 31.885250105]
                     },
                     {
                         name: "第四食堂",
                         name_: "C4",
-                        coordinate: [120.651338882, 31.817250105]
+                        coordinate: [120.531338882, 31.817250105]
                     },
                     {
                         name: "第三食堂",
                         name_: "C3",
-                        coordinate: [120.793338882, 31.882250105]
+                        coordinate: [120.793338882, 31.872250105]
                     },
                     {
                         name: "第五食堂",
                         name_: "C5",
-                        coordinate: [120.723338882, 31.967250105]
+                        coordinate: [120.713338882, 31.967250105]
                     }
                     // {name:'好利来食品店','name_':'S2',coordinate:[120.743338882,31.9487250105]},
                     // {name:'红太阳超市','name_':'S1',coordinate:[120.5738882,31.87087250105]},
@@ -259,8 +259,8 @@
                         .attr("stroke", "#000")
                         .attr("stroke-width", 0.3)
                         .attr("opacity", 0.2)
-                        // .attr('fill', '#94898e');
-                    .attr("fill", "#fff");
+                        // .attr('fill', '#dddddd');
+                        .attr("fill", "#fff");
 
                     map_chart.sites = map_chart.g
                         .selectAll(".site")
@@ -786,7 +786,7 @@
                 // donut_chart_();
                 //extra_info_(graph);
 
-                d3.select('.ivu-btn-success')
+                d3.select('#arrange')
                     .on('click',()=>{
                         // console.log(111);
                         // map_chart.sites
@@ -851,7 +851,7 @@
                             );
                     })
 
-                d3.select('.ivu-btn-warning')
+                d3.select('#arrange-default')
                     .on('click',()=>{
                         // console.log(111);
                         // map_chart.sites.selectAll(".radial_stacked").remove();
@@ -1044,7 +1044,7 @@
   #tool_title {
     position: absolute;
     left: 0;
-    bottom: 10px;
+    bottom: 30px;
     width: 200px;
     height: 200px;
     z-index: 0;

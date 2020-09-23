@@ -10,6 +10,10 @@ export default class DataManager {
     return axios.get('f1_scatter_data');
   }
 
+  static get_table_data() {
+    return axios.get('table_data');
+  }
+
   static get_f1_main_data() {
     return axios.get('f1_main_data');
   }

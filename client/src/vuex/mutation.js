@@ -19,6 +19,12 @@ const mutation = {
   },
   adj_nodes(state, payload) {
     state.adj_nodes = JSON.parse(JSON.stringify(payload));
+  },
+  sim_nodes(state, payload) {
+    state.sim_nodes = JSON.parse(JSON.stringify(payload));
+  },
+  group(state, payload) {
+    state.group = JSON.parse(JSON.stringify(payload));
   }
 };
 

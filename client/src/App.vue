@@ -79,14 +79,26 @@
      border-color: #ffffff;
   }
 
+  .ivu-table-cell{
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .ivu-table-cell{
+    font-size: 12px;
+  }
+
+  .ivu-table td, .ivu-table th {
+    height: 28px;
+  }
+
   .ivu-switch-checked {
     border-color: #f77d8c;
     background-color: #f77d8c;
   }
   .ivu-slider-wrap {
     /*align-items: center;*/
-    width: 75%;
-    left: 4%;
+    width: 73%;
+    left: 5%;
     bottom:6%;
   }
 

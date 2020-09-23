@@ -10,12 +10,14 @@ const store = new Vuex.Store({
   // 定义状态
   state: {
     status:0,
+    group:'',
     current_cluster:'',
     current_canteen:'',
     arrangeDinging:false,
     cf_value:[],
     df_value:[],
-    adj_nodes:[]
+    adj_nodes:[],
+    sim_nodes:[]
   },
   mutations: mutation,
   actions: action,

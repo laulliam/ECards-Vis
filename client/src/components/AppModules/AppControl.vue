@@ -1,17 +1,17 @@
 <template>
   <div id="control_panel">
     <div id="network_info">
-      <Card  :padding="0"  style="width: 250px">
+      <Card  style="width: 250px">
         <CellGroup>
           <Cell title="Department" extra="A1" >
             <Icon type="ios-school"></Icon>
             <span>Department</span>
           </Cell>
-          <Cell title="Number of Nodes" extra="378">
+          <Cell title="Number of Nodes" extra="239">
             <Icon type="ios-ionic" />
             <span>Number of Nodes</span>
           </Cell>
-          <Cell title="Number of Links" extra="3251" >
+          <Cell title="Number of Links" extra="219" >
             <Icon type="ios-git-merge" />
             <span>Number of Links</span>
           </Cell>
@@ -23,39 +23,11 @@
       <span>Co-occurrence Frequency</span>
       <Slider v-model="cf_value" :max='cf_max' :min='cf_min' @on-change="cf_change" range></Slider>
     </div>
-    <div class="control">
-      <Icon type="ios-analytics-outline" size="18" />
-      <span>Academic Performance</span>
-      <Slider id="df-slider" v-model="df_value" range @on-change="df_change"></Slider>
+    <div id="cf_chart">
+<!--      <Icon type="ios-analytics-outline" size="18" />-->
+<!--      <span>Academic Performance</span>-->
+<!--      <Slider id="df-slider" v-model="df_value" range @on-change="df_change"></Slider>-->
     </div>
-<!--    <div class="control" id="cf_chart" style="top:1%"></div>-->
-<!--    <div class="control" id="df_chart" style="top:1%"></div>-->
-    <!--    <div class="control">-->
-    <!--      &nbsp;Degree Centrality-->
-    <!--      <Slider v-model="value3" range></Slider>-->
-    <!--    </div>-->
-    <!--    <div class="control">-->
-    <!--      &nbsp;Betweenness Centrality-->
-    <!--      <Slider v-model="value4" range></Slider>-->
-    <!--    </div>-->
-    <!--    <div class="control">-->
-    <!--      Orderliness-->
-    <!--      <Tag color="#fff"></Tag>-->
-    <!--      <Tag color="#d0619b"></Tag>-->
-    <!--      <Tag color="rgba(208,97,155,0.88)"></Tag>-->
-    <!--      <Tag color="rgba(208,97,155,0.76)"></Tag>-->
-    <!--      <Tag color="rgba(208,97,155,0.61)"></Tag>-->
-    <!--      <Tag color="rgba(208,97,155,0.38)"></Tag>-->
-    <!--    </div>-->
-    <!--    <div class="control">-->
-    <!--      Diligence-->
-    <!--      <Tag color="#fff"></Tag>-->
-    <!--      <Tag color="#4ea397"></Tag>-->
-    <!--      <Tag color="rgba(78,163,151,0.91)"></Tag>-->
-    <!--      <Tag color="rgba(78,163,151,0.75)"></Tag>-->
-    <!--      <Tag color="rgba(78,163,151,0.53)"></Tag>-->
-    <!--      <Tag color="rgba(78,163,151,0.26)"></Tag>-->
-    <!--    </div>-->
     <div id="c_tool_title"></div>
   </div>
 </template>
@@ -78,41 +50,28 @@
         },
         mounted() {
             this.Init_Title()
-            // this.Init('df_chart')
-            // DataManager.get_dept07_graph([1,115]).then(res=>{
-            //     let cf_data = d3.nest().key(d=>d.value).entries(res.data.links).map(d=>{
-            //         return {
-            //             name:parseInt(d.key),
-            //             value:d.values.length
-            //         }
-            //     }).sort((a,b)=>a.name - b.name)
-            //     let data1 = [...Array(d3.max(cf_data,d=>d.name))].map((d,i)=>{
-            //         if(cf_data.findIndex(s=>s.name === i+1) !== -1)
-            //             return cf_data[cf_data.findIndex(s=>s.name === i+1)].value
-            //         else
-            //             return 0
-            //     })
-            //
-            //     let df_data = d3.nest().key(d=>d.degree).entries(res.data.nodes).map(d=>{
-            //         return {
-            //             name:parseInt(d.key),
-            //             value:d.values.length
-            //         }
-            //     }).sort((a,b)=>a.name - b.name)
-            //
-            //     let data2 = [...Array(d3.max(df_data,d=>d.name))].map((d,i)=>{
-            //         if(df_data.findIndex(s=>s.name === i+1) !== -1)
-            //             return df_data[df_data.findIndex(s=>s.name === i+1)].value
-            //         else
-            //             return 0
-            //     })
-            //
-            //
-            //     this.Init('cf_chart',data1)
-            //     this.Init('df_chart',data2)
-            //     // console.log(data2);
-            //
-            // })
+            DataManager.get_dept07_graph([1,115]).then(res=>{
+                // d3.selectAll('.ivu-cell-extra').data(['A1',res.data.nodes.length,res.data.links.length]).html(d=>d)
+
+                let cf_data = d3.nest().key(d=>d.value).entries(res.data.links).map(d=>{
+                    return {
+                        name:parseInt(d.key),
+                        value:d.values.length
+                    }
+                }).sort((a,b)=>a.name - b.name)
+                // console.log(cf_data);
+                let data1 = [...Array(d3.max(cf_data,d=>d.name))].map((d,i)=>{
+                    if(cf_data.findIndex(s=>s.name === i+1) !== -1)
+                        return cf_data[cf_data.findIndex(s=>s.name === i+1)].value
+                    else
+                        return 0
+                })
+
+                // console.log(data1);
+
+                this.Init('cf_chart',data1)
+
+            })
         },
         methods:{
             Init_Title() {
@@ -130,7 +89,6 @@
 
                 chart.setOption(option)
             },
-
             Init(dom_id,data){
                 let chart = this.$echarts.init(document.getElementById(dom_id))
                 let echarts = this.$echarts
@@ -140,13 +98,13 @@
                         formatter:'{b}: {c}'
                     },
                     grid:{
-                        top:'5%',
-                        bottom:'20%'
+                        top:'3%',
+                        bottom:'27%'
                     },
                     xAxis: {
                         type: 'category',
                         boundaryGap: false,//坐标轴两边留白
-                        data: [...Array(data.length)].map((d,i)=>i+1),
+                        data: [...Array(115)].map((d,i)=>i+1),
                         axisTick:{//坐标轴刻度相关设置。
                             show: false,
                         },
@@ -196,7 +154,6 @@
                                     // 	opacity:0.1
                                 }
                             }
-
                         }
                     ],
                     dataZoom: [
@@ -241,41 +198,6 @@
                 };
                 chart.setOption(option)
             },
-            /*Init(){
-                let width = document.getElementById('control_panel').offsetWidth;
-                let height = document.getElementById('control_panel').offsetHeight;
-
-                let margin = {top: 10, right: 20, bottom: 10, left:20};
-                width = width - margin.left - margin.right;
-                height = height - margin.top - margin.bottom;
-
-                let svg = d3.select('#test03')
-                    .append("svg")
-                    .attr("width", width + margin.left + margin.right)
-                    .attr("height", height + margin.top + margin.bottom)
-                    // .attr("viewBox", [-width / 2, -height / 2, width, height])
-                    .attr("stroke-linejoin", "round")
-                    .attr("stroke-linecap", "round");
-
-                let x = d3.scaleBand()
-                    .range([0, width])
-                    .domain(new Array(30).fill(0).map((d, i) => i + 1))
-                // .padding(0.01);
-
-                svg.append("g")
-                    .attr("transform", "translate("+margin.left+"," + height + ")")
-                    .call(d3.axisBottom(x));
-
-                svg.append('g')
-                    .attr("transform", "translate("+margin.left+"," + height + ")")
-                    .selectAll('.point')
-                    .data([1,3,7])
-                    .enter()
-                    .append('circle')
-                    .attr('r',2)
-                    .attr('cx',d=>x(d)+7)
-                    .attr('cy',5)
-            },*/
             cf_change(value){
                 this.cf_value = value
                 this.$store.commit('cf_value',this.cf_value);
@@ -295,11 +217,11 @@
     top:0;
     width: 27%;
     height: 15%;
-    /*background-color: #3eff3e;*/
+    /*background-color: #3e ff3e;*/
   }
   #control_panel .control{
     position: relative;
-    top:20%;
+    top:23%;
     /*padding-left: 10%;*/
     /*margin:0 auto;*/
     margin-right: 3%;
@@ -310,10 +232,23 @@
     /*background-color: darkred;*/
   }
 
+  #cf_chart{
+    position: absolute;
+    top:53%;
+    /*padding-left: 10%;*/
+    /*margin:0 auto;*/
+    margin-right: 3%;
+    /*margin-bottom: 20%;*/
+    float: right;
+    width:50%;
+    left: 45%;
+    height: 35%;
+  }
+
   #network_info{
     position: absolute;
     background: transparent;
-    top: 20%;
+    top: 18%;
     width: 43%;
     height: 80%;
     z-index: 20;
@@ -325,4 +260,6 @@
     height: 20%;
     /*background-color: royalblue;*/
   }
+
+
 </style>

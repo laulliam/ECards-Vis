@@ -3,7 +3,7 @@ var router = express.Router();
 var path = require('path')
 var fs = require('fs')
 var d3 = require('d3');
-var nx = require('jsnetworkx')
+// var nx = require('jsnetworkx')
 
 var sql_operation = require("./operation");
 
@@ -27,6 +27,12 @@ router.get("/f1_scatter_data", function(req, res, next) {
         data:d.values.map(d=>[d.x,d.y,d.card_id])
       }
     }).sort((a,b)=>a.name.localeCompare(b.name));
+    res.send(data);
+  });
+});
+
+router.get("/table_data", function(req, res, next) {
+  sql_operation.query(`select card_id,total,cafeteria,store,count,cluster from cluster_data`,data=>{
     res.send(data);
   });
 });
@@ -254,7 +260,8 @@ router.get("/meal_dept_timeline_pro", function(req, res, next) {
 });
 
 router.get("/dept07_graph", function(req, res, next) {
-  sql_operation.query(`select * from dept07_graph_pro`,data=>{
+  sql_operation.query(`select * from dept07_graph_final`,data=>{
+    // data= data.filter(d=>d.ae_s !== null).filter(d=>d.ae_t !== null).filter(d=>d.d_t !== null).filter(d=>d.d_s !== null)
 
     // data = data.filter(d=>parseInt(d.value) >= req.query.min && parseInt(d.value) <= req.query.max)
     // data = data.filter(d=>parseInt(d.sg_number) >= req.query.cs_min && parseInt(d.sg_number) <= req.query.cs_max)
@@ -272,14 +279,15 @@ router.get("/dept07_graph", function(req, res, next) {
     // res.send(G.subgraph())
 
     let nodes = [];
+
     data.forEach(d=>{
       if(nodes.findIndex(x=>x.id === parseInt(d.source)) !== -1 ){}
       else{
-        nodes.push({id:parseInt(d.source),ae:d.ae_s,d:d.d_s,score:d.source_rank})
+        nodes.push({id:parseInt(d.source),ae:d.ae_s,d:d.d_s,score:d.source_rank,class:d.s_class})
       }
       if(nodes.findIndex(x=>x.id === parseInt(d.target)) !== -1 ){}
       else{
-        nodes.push({id:parseInt(d.target),ae:d.ae_t,d:d.d_t,score:d.target_rank})
+        nodes.push({id:parseInt(d.target),ae:d.ae_t,d:d.d_t,score:d.target_rank,class:d.t_class})
       }
     });
 

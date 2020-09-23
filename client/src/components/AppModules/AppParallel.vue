@@ -119,7 +119,7 @@
 #parallel_chart{
   position: absolute;
   left: 0;
-  bottom:0;
+  top: 40%;
   width: 27%;
   height: 30%;
 }

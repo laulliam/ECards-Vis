@@ -12,7 +12,6 @@
             }))
         },
         methods:{
-
             Draw(pie_data,scatter_data){
                 let chart = this.$echarts.init(document.getElementById('pie_chart'));
 
@@ -30,16 +29,16 @@
                 })
 
                 let color = [
-                    "#d0648a",
-                    "#d07999",
-                    "#f58db2",
-                    "#f2b3c9",
-                    "#f2c4bc",
-                    "#f2c287",
-                    "#b8f29c",
-                    "#7bd9a5",
-                    "#22c3aa",
-                    "#4ea397"
+                    "#19CAAD",
+                    "#8CC7B5",
+                    "#A0EEE1",
+                    "#BEE7E9",
+                    "#BEEDC7",
+                    "#D6D5B7",
+                    "#D1BA74",
+                    "#E6CEAC",
+                    "#ECAD9E",
+                    "#F4606C"
                 ]
 
                 let option = {
@@ -51,16 +50,16 @@
                     },
                     backgroundColor: '#fff',
                     color:[
-                        "#d0648a",
-                        "#d07999",
-                        "#f58db2",
-                        "#f2b3c9",
-                        "#f2c4bc",
-                        "#f2c287",
-                        "#b8f29c",
-                        "#7bd9a5",
-                        "#22c3aa",
-                        "#4ea397"
+                        "#19CAAD",
+                        "#8CC7B5",
+                        "#A0EEE1",
+                        "#BEE7E9",
+                        "#BEEDC7",
+                        "#D6D5B7",
+                        "#D1BA74",
+                        "#E6CEAC",
+                        "#ECAD9E",
+                        "#F4606C"
                     ],
                     legend:{
                         // show:false,
@@ -122,7 +121,7 @@
                         width:'30%',
                         height:'70%',
                         left:8,
-                        y:'25%',
+                        y:'20%',
                         containLabel: true
                     }],
                     series: [{
