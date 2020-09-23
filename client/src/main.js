@@ -19,7 +19,7 @@ Vue.prototype.qs = qs;
 Vue.use(Resource);
 Vue.use(ViewUI);
 
-axios.defaults.baseURL = 'http://10.10.4.27:3000/';
+axios.defaults.baseURL = 'http://******:3000/';
 // Vue.http.options.root = 'http://localhost:3000/';
 Vue.http.options.emulateJson = true;
 
